@@ -23,7 +23,7 @@ end
 -- CONFIG
 --==================================================
 
-local SCRIPT_LINK = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/NathubV/mm2/refs/heads/main/loader"))()'
+local SCRIPT_LINK = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/NathubV/universal/refs/heads/main/lua"))()'
 
 local ANIME_ICON = "rbxassetid://14640964816"
 
