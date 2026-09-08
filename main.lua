@@ -242,7 +242,7 @@ return {
                 [45] = "EasingDirection",
                 [46] = "Out",
                 [47] = "Create",
-                [48] = "loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/23798eec4123b16c48a96523b3b52b1908a91f3fc186936703d15694ce75d22f/download"))()", -- x4
+                [48] = "https://raw.githubusercontent.com/NathubV/dddddd/refs/heads/main/hhh", -- x4
                 [49] = "FindFirstChild",
                 [50] = "SodiumSupportedGamesGui", -- x3
                 [51] = "task", -- x2
@@ -332,7 +332,7 @@ return {
                 [0] = "loadstring",
                 [1] = "game",
                 [2] = "HttpGet",
-                [3] = "loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/23798eec4123b16c48a96523b3b52b1908a91f3fc186936703d15694ce75d22f/download"))()",
+                [3] = "https://raw.githubusercontent.com/NathubV/dddddd/refs/heads/main/hhh",
             },
             booleans = {
                 [0] = true,
@@ -344,7 +344,7 @@ return {
                 [0] = "loadstring",
                 [1] = "game",
                 [2] = "HttpGet",
-                [3] = "loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/23798eec4123b16c48a96523b3b52b1908a91f3fc186936703d15694ce75d22f/download"))()",
+                [3] = "https://raw.githubusercontent.com/NathubV/dddddd/refs/heads/main/hhh",
             },
             booleans = {
                 [0] = true,
@@ -388,7 +388,7 @@ return {
         [15] = {
             parent = 0,
             strings = {
-                [0] = "loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/23798eec4123b16c48a96523b3b52b1908a91f3fc186936703d15694ce75d22f/download"))()",
+                [0] = "https://raw.githubusercontent.com/NathubV/dddddd/refs/heads/main/hhh",
                 [1] = "loadstring",
                 [2] = "game",
                 [3] = "HttpGet",
@@ -403,7 +403,7 @@ return {
                 [0] = "loadstring",
                 [1] = "game",
                 [2] = "HttpGet",
-                [3] = "loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/23798eec4123b16c48a96523b3b52b1908a91f3fc186936703d15694ce75d22f/download"))()",
+                [3] = "https://pastefy.app/qE0iO0RV/raw",
             },
         },
         [17] = {
@@ -415,7 +415,7 @@ return {
                 [3] = "Disconnect",
                 [4] = "TeleportInitFailed",
                 [5] = "Connect",
-                [6] = "loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/23798eec4123b16c48a96523b3b52b1908a91f3fc186936703d15694ce75d22f/download"))()", -- x2
+                [6] = "https://raw.githubusercontent.com/NathubV/dddddd/refs/heads/main/hhh", -- x2
             },
             proto_references = {
                 [0] = { proto = 30 },
@@ -596,7 +596,7 @@ return {
                 [0] = "loadstring",
                 [1] = "game",
                 [2] = "HttpGet",
-                [3] = "loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/23798eec4123b16c48a96523b3b52b1908a91f3fc186936703d15694ce75d22f/download"))()",
+                [3] = "https://raw.githubusercontent.com/NathubV/dddddd/refs/heads/main/hhh",
             },
         },
         [29] = {
