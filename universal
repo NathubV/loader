@@ -74,7 +74,6 @@ local GAMES = {
 		Name = "Murder Mystery 2",
 		Description = "Universal MM2 GUI",
 		Color = Color3.fromRGB(255, 55, 65),
-		PlaceId = Invalid,
 		Live = 1284,
 		Total = 48392
 	},
@@ -82,7 +81,6 @@ local GAMES = {
 		Name = "Adopt Me!",
 		Description = "Sodium ADM Script",
 		Color = Color3.fromRGB(35, 180, 245),
-		PlaceId = Invalid,
 		Live = 947,
 		Total = 31205
 	},
