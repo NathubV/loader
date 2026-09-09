@@ -1,15 +1,21 @@
---// UNIVERSAL PREMIUM SCRIPT
+--// GURKHA LOADER
 --// Roblox Studio LocalScript
---// Put in StarterPlayer > StarterPlayerScripts
---// SMALL LANDSCAPE VERSION
---// X = Minimize to anime icon
---// Anime icon = Click to restore
---// Copy button uses setclipboard() when supported
+--// Place in StarterPlayer > StarterPlayerScripts
+--//
+--// JOIN:
+--// Main GUI shrinks
+--// Large teleport panel slides in from the right
+--// 3 second animation
+--//
+--// BACK TO GAMES:
+--// Large panel slides out
+--// Main GUI returns to normal size
 
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -23,34 +29,104 @@ end
 -- CONFIG
 --==================================================
 
-local SCRIPT_LINK = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/NathubV/universal/refs/heads/main/lua"))()'
-
 local ANIME_ICON = "rbxassetid://14640964816"
+
+local NORMAL_SIZE = UDim2.fromOffset(620, 430)
+local SMALL_SIZE = UDim2.fromOffset(300, 210)
+local PANEL_SIZE = UDim2.fromOffset(620, 430)
+
+local ANIMATION_TIME = 3
+
+--==================================================
+-- RAINBOW CONFIG
+--==================================================
+
+local RAINBOW_SPEED = 0.25
+local RAINBOW_SEGMENTS = 96
+local RAINBOW_THICKNESS = 3
+local RAINBOW_GLOW_THICKNESS = 7
+local RAINBOW_SATURATION = 0.78
+local RAINBOW_BRIGHTNESS = 1
+local RAINBOW_GLOW_TRANSPARENCY = 0.82
+local RAINBOW_CORNER_RADIUS = 14
+
+--==================================================
+-- SCRIPT
+--==================================================
+
+local SCRIPT_TO_COPY =
+	'loadstring(game:HttpGet("https://raw.githubusercontent.com/NathubV/universal/refs/heads/main/lua"))()'
+
+local SCRIPT_LINK = SCRIPT_TO_COPY
+
+--==================================================
+-- GAMES
+--==================================================
 
 local GAMES = {
 	{
 		Name = "Murder Mystery 2",
 		Description = "Universal MM2 GUI",
 		Color = Color3.fromRGB(255, 55, 65),
-		PlaceId = 142823291
+		PlaceId = 142823291,
+		Live = 1284,
+		Total = 48392
 	},
 	{
 		Name = "Adopt Me!",
 		Description = "Sodium ADM Script",
 		Color = Color3.fromRGB(35, 180, 245),
-		PlaceId = 920587237
+		PlaceId = 920587237,
+		Live = 947,
+		Total = 31205
 	},
 	{
 		Name = "Grow a Garden",
 		Description = "GAG Script",
 		Color = Color3.fromRGB(45, 230, 110),
-		PlaceId = 126884695634066
+		PlaceId = 126884695634066,
+		Live = 1763,
+		Total = 62481
 	},
 	{
 		Name = "Blade Ball",
 		Description = "BladeBall Script",
 		Color = Color3.fromRGB(245, 150, 35),
-		PlaceId = 13772394625
+		PlaceId = 13772394625,
+		Live = 823,
+		Total = 27914
+	},
+	{
+		Name = "Steal An Egg",
+		Description = "Steal An Egg Script",
+		Color = Color3.fromRGB(255, 210, 55),
+		PlaceId = 107778070777162,
+		Live = 2416,
+		Total = 89731
+	},
+	{
+		Name = "BrookHaven 🏡RP",
+		Description = "Brookhaven Script",
+		Color = Color3.fromRGB(120, 180, 255),
+		PlaceId = 4924922222,
+		Live = 1105,
+		Total = 41682
+	},
+	{
+		Name = "DOORS",
+		Description = "DOORS Script",
+		Color = Color3.fromRGB(100, 100, 110),
+		PlaceId = 6516141723,
+		Live = 736,
+		Total = 23517
+	},
+	{
+		Name = "RUNAWAYS",
+		Description = "RUNAWAYS Script",
+		Color = Color3.fromRGB(255, 100, 55),
+		PlaceId = 118418618261207,
+		Live = 1532,
+		Total = 54208
 	}
 }
 
@@ -61,11 +137,482 @@ local GAMES = {
 local BG = Color3.fromRGB(10, 10, 14)
 local PANEL = Color3.fromRGB(18, 18, 24)
 local BUTTON = Color3.fromRGB(24, 24, 32)
+
 local TEXT = Color3.fromRGB(238, 238, 242)
 local SUBTEXT = Color3.fromRGB(145, 145, 155)
+
 local PURPLE = Color3.fromRGB(185, 50, 245)
 local GREEN = Color3.fromRGB(45, 230, 110)
 local RED = Color3.fromRGB(255, 55, 65)
+
+--==================================================
+-- RAINBOW EFFECT SYSTEM
+--==================================================
+
+local rainbowObjects = {}
+
+local function createRainbowEffect(target, cornerRadius)
+	local container = Instance.new("Frame")
+	container.Name = "RainbowBorder"
+	container.BackgroundTransparency = 1
+	container.BorderSizePixel = 0
+	container.Size = UDim2.fromScale(1, 1)
+	container.Position = UDim2.fromScale(0, 0)
+	container.ClipsDescendants = true
+	container.Active = false
+	container.ZIndex = 1
+	container.Parent = target
+
+	local containerCorner = Instance.new("UICorner")
+	containerCorner.CornerRadius = UDim.new(0, cornerRadius)
+	containerCorner.Parent = container
+
+	local glowContainer = Instance.new("Frame")
+	glowContainer.Name = "RainbowGlow"
+	glowContainer.BackgroundTransparency = 1
+	glowContainer.BorderSizePixel = 0
+	glowContainer.Size = UDim2.fromScale(1, 1)
+	glowContainer.Position = UDim2.fromScale(0, 0)
+	glowContainer.ClipsDescendants = true
+	glowContainer.Active = false
+	glowContainer.ZIndex = 1
+	glowContainer.Parent = target
+
+	local glowCorner = Instance.new("UICorner")
+	glowCorner.CornerRadius = UDim.new(0, cornerRadius)
+	glowCorner.Parent = glowContainer
+
+	local segments = {}
+	local distances = {}
+	local positions = {}
+	local rotations = {}
+	local lengths = {}
+
+	for i = 1, RAINBOW_SEGMENTS do
+		local glow = Instance.new("Frame")
+		glow.Name = "Glow_" .. i
+		glow.BackgroundColor3 = Color3.fromHSV(
+			(i - 1) / RAINBOW_SEGMENTS,
+			RAINBOW_SATURATION,
+			RAINBOW_BRIGHTNESS
+		)
+		glow.BackgroundTransparency = RAINBOW_GLOW_TRANSPARENCY
+		glow.BorderSizePixel = 0
+		glow.AnchorPoint = Vector2.new(0.5, 0.5)
+		glow.Active = false
+		glow.ZIndex = 1
+		glow.Parent = glowContainer
+
+		local glowCorner = Instance.new("UICorner")
+		glowCorner.CornerRadius = UDim.new(1, 0)
+		glowCorner.Parent = glow
+
+		local segment = Instance.new("Frame")
+		segment.Name = "Segment_" .. i
+		segment.BackgroundColor3 = Color3.fromHSV(
+			(i - 1) / RAINBOW_SEGMENTS,
+			RAINBOW_SATURATION,
+			RAINBOW_BRIGHTNESS
+		)
+		segment.BorderSizePixel = 0
+		segment.AnchorPoint = Vector2.new(0.5, 0.5)
+		segment.Active = false
+		segment.ZIndex = 2
+		segment.Parent = container
+
+		local segmentCorner = Instance.new("UICorner")
+		segmentCorner.CornerRadius = UDim.new(1, 0)
+		segmentCorner.Parent = segment
+
+		segments[i] = {
+			Main = segment,
+			Glow = glow
+		}
+	end
+
+	local lastWidth = 0
+	local lastHeight = 0
+
+	local function updateGeometry()
+		local width = target.AbsoluteSize.X
+		local height = target.AbsoluteSize.Y
+
+		if width <= 1 or height <= 1 then
+			return
+		end
+
+		if width == lastWidth and height == lastHeight then
+			return
+		end
+
+		lastWidth = width
+		lastHeight = height
+
+		local radius = math.min(
+			cornerRadius,
+			width / 2,
+			height / 2
+		)
+
+		if radius <= 0 then
+			return
+		end
+
+		local horizontalLength = math.max(
+			0,
+			width - radius * 2
+		)
+
+		local verticalLength = math.max(
+			0,
+			height - radius * 2
+		)
+
+		local quarterArc = math.pi * radius / 2
+
+		local perimeter =
+			(horizontalLength * 2)
+			+ (verticalLength * 2)
+			+ (quarterArc * 4)
+
+		if perimeter <= 0 then
+			return
+		end
+
+		local segmentLength =
+			perimeter / RAINBOW_SEGMENTS
+
+		for i = 1, RAINBOW_SEGMENTS do
+			local distance =
+				(i - 0.5) * segmentLength
+
+			local x
+			local y
+			local rotation = 0
+
+			-- TOP
+			if distance < horizontalLength then
+
+				x = radius + distance
+				y = 0
+				rotation = 0
+
+			-- TOP RIGHT
+			elseif distance < horizontalLength + quarterArc then
+
+				local arcDistance =
+					distance - horizontalLength
+
+				local angle =
+					(-math.pi / 2)
+					+ (arcDistance / radius)
+
+				x =
+					(width - radius)
+					+ radius * math.cos(angle)
+
+				y =
+					radius
+					+ radius * math.sin(angle)
+
+				rotation =
+					math.deg(angle + math.pi / 2)
+
+			-- RIGHT
+			elseif distance <
+				horizontalLength
+				+ quarterArc
+				+ verticalLength then
+
+				local sideDistance =
+					distance
+					- horizontalLength
+					- quarterArc
+
+				x = width
+				y = radius + sideDistance
+				rotation = 90
+
+			-- BOTTOM RIGHT
+			elseif distance <
+				horizontalLength
+				+ quarterArc
+				+ verticalLength
+				+ quarterArc then
+
+				local arcDistance =
+					distance
+					- horizontalLength
+					- quarterArc
+					- verticalLength
+
+				local angle =
+					arcDistance / radius
+
+				x =
+					(width - radius)
+					+ radius * math.cos(angle)
+
+				y =
+					(height - radius)
+					+ radius * math.sin(angle)
+
+				rotation =
+					math.deg(angle + math.pi / 2)
+
+			-- BOTTOM
+			elseif distance <
+				horizontalLength
+				+ quarterArc
+				+ verticalLength
+				+ quarterArc
+				+ horizontalLength then
+
+				local sideDistance =
+					distance
+					- horizontalLength
+					- quarterArc
+					- verticalLength
+					- quarterArc
+
+				x =
+					width
+					- radius
+					- sideDistance
+
+				y = height
+				rotation = 180
+
+			-- BOTTOM LEFT
+			elseif distance <
+				horizontalLength
+				+ quarterArc
+				+ verticalLength
+				+ quarterArc
+				+ horizontalLength
+				+ quarterArc then
+
+				local arcDistance =
+					distance
+					- horizontalLength
+					- quarterArc
+					- verticalLength
+					- quarterArc
+					- horizontalLength
+
+				local angle =
+					(math.pi / 2)
+					+ (arcDistance / radius)
+
+				x =
+					radius
+					+ radius * math.cos(angle)
+
+				y =
+					(height - radius)
+					+ radius * math.sin(angle)
+
+				rotation =
+					math.deg(angle + math.pi / 2)
+
+			-- LEFT
+			elseif distance <
+				horizontalLength
+				+ quarterArc
+				+ verticalLength
+				+ quarterArc
+				+ horizontalLength
+				+ quarterArc
+				+ verticalLength then
+
+				local sideDistance =
+					distance
+					- horizontalLength
+					- quarterArc
+					- verticalLength
+					- quarterArc
+					- horizontalLength
+					- quarterArc
+
+				x = 0
+				y =
+					height
+					- radius
+					- sideDistance
+
+				rotation = 270
+
+			-- TOP LEFT
+			else
+
+				local arcDistance =
+					distance
+					- horizontalLength
+					- quarterArc
+					- verticalLength
+					- quarterArc
+					- horizontalLength
+					- quarterArc
+					- verticalLength
+
+				local angle =
+					math.pi
+					+ (arcDistance / radius)
+
+				x =
+					radius
+					+ radius * math.cos(angle)
+
+				y =
+					radius
+					+ radius * math.sin(angle)
+
+				rotation =
+					math.deg(angle + math.pi / 2)
+			end
+
+			distances[i] = distance
+			positions[i] = Vector2.new(x, y)
+			rotations[i] = rotation
+			lengths[i] = segmentLength
+
+			local mainSegment = segments[i].Main
+			local glowSegment = segments[i].Glow
+
+			mainSegment.Position =
+				UDim2.fromOffset(x, y)
+
+			mainSegment.Size =
+				UDim2.fromOffset(
+					math.max(4, segmentLength + 2),
+					RAINBOW_THICKNESS
+				)
+
+			mainSegment.Rotation = rotation
+
+			glowSegment.Position =
+				UDim2.fromOffset(x, y)
+
+			glowSegment.Size =
+				UDim2.fromOffset(
+					math.max(6, segmentLength + 4),
+					RAINBOW_GLOW_THICKNESS
+				)
+
+			glowSegment.Rotation = rotation
+		end
+	end
+
+	target:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+		updateGeometry
+	)
+
+	task.defer(updateGeometry)
+
+	local effectData = {
+		Target = target,
+		Container = container,
+		GlowContainer = glowContainer,
+		Segments = segments,
+		Distances = distances
+	}
+
+	table.insert(rainbowObjects, effectData)
+
+	return effectData
+end
+
+--==================================================
+-- RAINBOW ANIMATION
+--==================================================
+
+local rainbowPhase = 0
+
+RunService.RenderStepped:Connect(function(deltaTime)
+
+	rainbowPhase =
+		(rainbowPhase + deltaTime * RAINBOW_SPEED) % 1
+
+	for _, effect in ipairs(rainbowObjects) do
+
+		if effect.Target
+			and effect.Target.Parent
+			and effect.Target.Visible ~= false then
+
+			local segmentCount =
+				#effect.Segments
+
+			for i = 1, segmentCount do
+
+				local distance =
+					effect.Distances[i]
+
+				if distance then
+
+					local totalDistance = 0
+
+					local width =
+						effect.Target.AbsoluteSize.X
+
+					local height =
+						effect.Target.AbsoluteSize.Y
+
+					local radius =
+						math.min(
+							RAINBOW_CORNER_RADIUS,
+							width / 2,
+							height / 2
+						)
+
+					if radius > 0 then
+
+						local horizontalLength =
+							math.max(
+								0,
+								width - radius * 2
+							)
+
+						local verticalLength =
+							math.max(
+								0,
+								height - radius * 2
+							)
+
+						local quarterArc =
+							math.pi * radius / 2
+
+						totalDistance =
+							(horizontalLength * 2)
+							+ (verticalLength * 2)
+							+ (quarterArc * 4)
+					end
+
+					if totalDistance > 0 then
+
+						local hue =
+							(
+								distance / totalDistance
+								+ rainbowPhase
+							) % 1
+
+						local color =
+							Color3.fromHSV(
+								hue,
+								RAINBOW_SATURATION,
+								RAINBOW_BRIGHTNESS
+							)
+
+						effect.Segments[i].Main.BackgroundColor3 =
+							color
+
+						effect.Segments[i].Glow.BackgroundColor3 =
+							color
+					end
+				end
+			end
+		end
+	end
+end)
 
 --==================================================
 -- GUI
@@ -84,17 +631,27 @@ gui.Parent = playerGui
 
 local main = Instance.new("Frame")
 main.Name = "Main"
-main.Size = UDim2.fromOffset(520, 320)
+main.Size = NORMAL_SIZE
 main.Position = UDim2.fromScale(0.5, 0.5)
 main.AnchorPoint = Vector2.new(0.5, 0.5)
 main.BackgroundColor3 = BG
 main.BorderSizePixel = 0
-main.ClipsDescendants = true
+main.ClipsDescendants = false
+main.ZIndex = 5
 main.Parent = gui
 
 local mainCorner = Instance.new("UICorner")
 mainCorner.CornerRadius = UDim.new(0, 14)
 mainCorner.Parent = main
+
+--==================================================
+-- MAIN GUI RAINBOW
+--==================================================
+
+createRainbowEffect(
+	main,
+	RAINBOW_CORNER_RADIUS
+)
 
 --==================================================
 -- DRAG AREA
@@ -106,7 +663,7 @@ dragArea.BackgroundTransparency = 1
 dragArea.Position = UDim2.fromOffset(0, 3)
 dragArea.Size = UDim2.new(1, -65, 0, 70)
 dragArea.Active = true
-dragArea.ZIndex = 5
+dragArea.ZIndex = 10
 dragArea.Parent = main
 
 local dragging = false
@@ -114,6 +671,7 @@ local dragStart
 local startPosition
 
 dragArea.InputBegan:Connect(function(input)
+
 	if input.UserInputType == Enum.UserInputType.MouseButton1
 		or input.UserInputType == Enum.UserInputType.Touch then
 
@@ -122,7 +680,10 @@ dragArea.InputBegan:Connect(function(input)
 		startPosition = main.Position
 
 		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
+
+			if input.UserInputState ==
+				Enum.UserInputState.End then
+
 				dragging = false
 			end
 		end)
@@ -130,14 +691,18 @@ dragArea.InputBegan:Connect(function(input)
 end)
 
 UserInputService.InputChanged:Connect(function(input)
+
 	if not dragging then
 		return
 	end
 
-	if input.UserInputType == Enum.UserInputType.MouseMovement
-		or input.UserInputType == Enum.UserInputType.Touch then
+	if input.UserInputType ==
+		Enum.UserInputType.MouseMovement
+		or input.UserInputType ==
+		Enum.UserInputType.Touch then
 
-		local delta = input.Position - dragStart
+		local delta =
+			input.Position - dragStart
 
 		main.Position = UDim2.new(
 			startPosition.X.Scale,
@@ -156,14 +721,23 @@ local accent = Instance.new("Frame")
 accent.Size = UDim2.new(1, 0, 0, 3)
 accent.BackgroundColor3 = PURPLE
 accent.BorderSizePixel = 0
-accent.ZIndex = 2
+accent.ZIndex = 6
 accent.Parent = main
 
 local gradient = Instance.new("UIGradient")
 gradient.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 80, 220)),
-	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(230, 20, 150)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 30, 220))
+	ColorSequenceKeypoint.new(
+		0,
+		Color3.fromRGB(100, 80, 220)
+	),
+	ColorSequenceKeypoint.new(
+		0.5,
+		Color3.fromRGB(230, 20, 150)
+	),
+	ColorSequenceKeypoint.new(
+		1,
+		Color3.fromRGB(100, 30, 220)
+	)
 })
 gradient.Parent = accent
 
@@ -176,11 +750,11 @@ title.BackgroundTransparency = 1
 title.Position = UDim2.fromOffset(22, 18)
 title.Size = UDim2.new(1, -100, 0, 30)
 title.Font = Enum.Font.GothamBold
-title.Text = "UNIVERSAL PREMIUM SCRIPT"
+title.Text = "Gurkha Loader"
 title.TextSize = 19
 title.TextColor3 = Color3.fromRGB(225, 55, 205)
 title.TextXAlignment = Enum.TextXAlignment.Left
-title.ZIndex = 6
+title.ZIndex = 8
 title.Parent = main
 
 --==================================================
@@ -196,8 +770,80 @@ subtitle.Text = "Select a supported game to continue:"
 subtitle.TextSize = 12
 subtitle.TextColor3 = SUBTEXT
 subtitle.TextXAlignment = Enum.TextXAlignment.Left
-subtitle.ZIndex = 6
+subtitle.ZIndex = 8
 subtitle.Parent = main
+
+--==================================================
+-- ONLINE STATUS
+--==================================================
+
+local online = Instance.new("Frame")
+online.Name = "OnlineStatus"
+online.Size = UDim2.fromOffset(190, 30)
+online.Position = UDim2.new(1, -245, 0, 22)
+online.BackgroundColor3 = Color3.fromRGB(16, 28, 21)
+online.BorderSizePixel = 0
+online.ZIndex = 8
+online.Parent = main
+
+local onlineCorner = Instance.new("UICorner")
+onlineCorner.CornerRadius = UDim.new(0, 8)
+onlineCorner.Parent = online
+
+local onlineDot = Instance.new("TextLabel")
+onlineDot.BackgroundTransparency = 1
+onlineDot.Position = UDim2.fromOffset(9, 0)
+onlineDot.Size = UDim2.fromOffset(15, 30)
+onlineDot.Font = Enum.Font.GothamBold
+onlineDot.Text = "●"
+onlineDot.TextSize = 11
+onlineDot.TextColor3 = GREEN
+onlineDot.Parent = online
+
+local onlineText = Instance.new("TextLabel")
+onlineText.BackgroundTransparency = 1
+onlineText.Position = UDim2.fromOffset(27, 0)
+onlineText.Size = UDim2.new(1, -35, 1, 0)
+onlineText.Font = Enum.Font.GothamBold
+onlineText.Text = "ONLINE • 5,000+ ACTIVE"
+onlineText.TextSize = 9
+onlineText.TextColor3 = GREEN
+onlineText.TextXAlignment = Enum.TextXAlignment.Left
+onlineText.Parent = online
+
+task.spawn(function()
+
+	while online.Parent do
+
+		TweenService:Create(
+			onlineDot,
+			TweenInfo.new(
+				0.7,
+				Enum.EasingStyle.Sine,
+				Enum.EasingDirection.InOut
+			),
+			{
+				TextTransparency = 0.55
+			}
+		):Play()
+
+		task.wait(0.7)
+
+		TweenService:Create(
+			onlineDot,
+			TweenInfo.new(
+				0.7,
+				Enum.EasingStyle.Sine,
+				Enum.EasingDirection.InOut
+			),
+			{
+				TextTransparency = 0
+			}
+		):Play()
+
+		task.wait(0.7)
+	end
+end)
 
 --==================================================
 -- MINIMIZE BUTTON
@@ -214,27 +860,15 @@ close.Font = Enum.Font.GothamBold
 close.TextSize = 14
 close.TextColor3 = RED
 close.AutoButtonColor = false
-close.ZIndex = 10
+close.ZIndex = 12
 close.Parent = main
 
 local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0, 10)
 closeCorner.Parent = close
 
-close.MouseEnter:Connect(function()
-	if close.Active then
-		close.BackgroundColor3 = Color3.fromRGB(38, 22, 28)
-	end
-end)
-
-close.MouseLeave:Connect(function()
-	if close.Active then
-		close.BackgroundColor3 = Color3.fromRGB(24, 19, 25)
-	end
-end)
-
 --==================================================
--- ANIME RESTORE CIRCLE
+-- RESTORE CIRCLE
 --==================================================
 
 local restoreButton = Instance.new("ImageButton")
@@ -271,16 +905,14 @@ close.MouseButton1Click:Connect(function()
 
 	close.Active = false
 	dragArea.Active = false
-	close.Text = "..."
 
-	task.wait(0.3)
+	task.wait(0.15)
 
 	main.Visible = false
-
 	restoreButton.Visible = true
 	restoreButton.Size = UDim2.fromOffset(8, 8)
 
-	local growTween = TweenService:Create(
+	local tween = TweenService:Create(
 		restoreButton,
 		TweenInfo.new(
 			0.25,
@@ -292,33 +924,23 @@ close.MouseButton1Click:Connect(function()
 		}
 	)
 
-	growTween:Play()
+	tween:Play()
 
-	task.wait(0.1)
+	task.wait(0.3)
 
-	close.Text = "X"
 	close.Active = true
 	dragArea.Active = true
-
 end)
 
 --==================================================
 -- RESTORE
 --==================================================
 
-restoreButton.MouseEnter:Connect(function()
-	restoreButton.BackgroundColor3 = Color3.fromRGB(24, 20, 30)
-end)
-
-restoreButton.MouseLeave:Connect(function()
-	restoreButton.BackgroundColor3 = BG
-end)
-
 restoreButton.MouseButton1Click:Connect(function()
 
 	restoreButton.Active = false
 
-	local shrinkTween = TweenService:Create(
+	local tween = TweenService:Create(
 		restoreButton,
 		TweenInfo.new(
 			0.18,
@@ -330,19 +952,18 @@ restoreButton.MouseButton1Click:Connect(function()
 		}
 	)
 
-	shrinkTween:Play()
-	shrinkTween.Completed:Wait()
+	tween:Play()
+	tween.Completed:Wait()
 
 	restoreButton.Visible = false
 	restoreButton.Size = UDim2.fromOffset(52, 52)
 
 	main.Visible = true
 	restoreButton.Active = true
-
 end)
 
 --==================================================
--- RESTORE CIRCLE DRAGGING
+-- RESTORE CIRCLE DRAG
 --==================================================
 
 local circleDragging = false
@@ -350,15 +971,21 @@ local circleDragStart
 local circleStartPosition
 
 restoreButton.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-		or input.UserInputType == Enum.UserInputType.Touch then
+
+	if input.UserInputType ==
+		Enum.UserInputType.MouseButton1
+		or input.UserInputType ==
+		Enum.UserInputType.Touch then
 
 		circleDragging = true
 		circleDragStart = input.Position
 		circleStartPosition = restoreButton.Position
 
 		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
+
+			if input.UserInputState ==
+				Enum.UserInputState.End then
+
 				circleDragging = false
 			end
 		end)
@@ -366,14 +993,18 @@ restoreButton.InputBegan:Connect(function(input)
 end)
 
 UserInputService.InputChanged:Connect(function(input)
+
 	if not circleDragging then
 		return
 	end
 
-	if input.UserInputType == Enum.UserInputType.MouseMovement
-		or input.UserInputType == Enum.UserInputType.Touch then
+	if input.UserInputType ==
+		Enum.UserInputType.MouseMovement
+		or input.UserInputType ==
+		Enum.UserInputType.Touch then
 
-		local delta = input.Position - circleDragStart
+		local delta =
+			input.Position - circleDragStart
 
 		restoreButton.Position = UDim2.new(
 			circleStartPosition.X.Scale,
@@ -390,14 +1021,15 @@ end)
 
 local scroll = Instance.new("ScrollingFrame")
 scroll.Name = "GameList"
-scroll.Position = UDim2.fromOffset(22, 75)
-scroll.Size = UDim2.new(1, -44, 1, -118)
+scroll.Position = UDim2.fromOffset(22, 78)
+scroll.Size = UDim2.new(1, -44, 1, -125)
 scroll.BackgroundTransparency = 1
 scroll.BorderSizePixel = 0
 scroll.ScrollBarThickness = 3
 scroll.ScrollBarImageColor3 = Color3.fromRGB(65, 65, 75)
 scroll.CanvasSize = UDim2.new()
 scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scroll.ZIndex = 6
 scroll.Parent = main
 
 local layout = Instance.new("UIListLayout")
@@ -414,121 +1046,257 @@ divider.Size = UDim2.new(1, 0, 0, 1)
 divider.Position = UDim2.new(0, 0, 1, -42)
 divider.BackgroundColor3 = Color3.fromRGB(35, 35, 42)
 divider.BorderSizePixel = 0
+divider.ZIndex = 6
 divider.Parent = main
 
 local status = Instance.new("TextLabel")
 status.BackgroundTransparency = 1
 status.Position = UDim2.fromOffset(15, 0)
-status.Size = UDim2.fromOffset(180, 41)
+status.Size = UDim2.fromOffset(230, 41)
 status.Font = Enum.Font.GothamBold
 status.Text = "● SYSTEM: READY"
 status.TextSize = 9
 status.TextColor3 = GREEN
 status.TextXAlignment = Enum.TextXAlignment.Left
+status.ZIndex = 7
 status.Parent = divider
 
 local queue = Instance.new("TextLabel")
 queue.BackgroundTransparency = 1
-queue.Position = UDim2.new(1, -200, 0, 0)
-queue.Size = UDim2.fromOffset(185, 41)
+queue.Position = UDim2.new(1, -240, 0, 0)
+queue.Size = UDim2.fromOffset(225, 41)
 queue.Font = Enum.Font.GothamBold
 queue.Text = "TELEPORT READY"
 queue.TextSize = 9
 queue.TextColor3 = Color3.fromRGB(75, 145, 255)
 queue.TextXAlignment = Enum.TextXAlignment.Right
+queue.ZIndex = 7
 queue.Parent = divider
 
 --==================================================
--- TELEPORT SCREEN
+-- TELEPORT STATE
+--==================================================
+
+local teleportPanel = nil
+local teleportBusy = false
+
+--==================================================
+-- CREATE TELEPORT PANEL
 --==================================================
 
 local function showTeleportScreen(gameData)
 
-	scroll.Visible = false
-	title.Visible = false
-	subtitle.Visible = false
-	close.Visible = false
-	divider.Visible = false
-	dragArea.Visible = false
+	if teleportPanel then
+		return
+	end
 
-	local screen = Instance.new("Frame")
-	screen.Name = "TeleportScreen"
-	screen.Size = UDim2.fromScale(1, 1)
-	screen.BackgroundColor3 = BG
-	screen.BorderSizePixel = 0
-	screen.ZIndex = 20
-	screen.Parent = main
+	teleportBusy = true
 
-	local screenCorner = Instance.new("UICorner")
-	screenCorner.CornerRadius = UDim.new(0, 14)
-	screenCorner.Parent = screen
+	--==================================================
+	-- SHRINK MAIN GUI
+	--==================================================
 
-	local screenAccent = Instance.new("Frame")
-	screenAccent.Size = UDim2.new(1, 0, 0, 3)
-	screenAccent.BackgroundColor3 = gameData.Color
-	screenAccent.BorderSizePixel = 0
-	screenAccent.ZIndex = 21
-	screenAccent.Parent = screen
+	local shrinkTween = TweenService:Create(
+		main,
+		TweenInfo.new(
+			ANIMATION_TIME,
+			Enum.EasingStyle.Quart,
+			Enum.EasingDirection.InOut
+		),
+		{
+			Size = SMALL_SIZE
+		}
+	)
+
+	shrinkTween:Play()
+
+	--==================================================
+	-- LARGE PANEL
+	--==================================================
+
+	local panel = Instance.new("Frame")
+	panel.Name = "TeleportPanel"
+	panel.Size = PANEL_SIZE
+	panel.Position = UDim2.new(1, 650, 0.5, 0)
+	panel.AnchorPoint = Vector2.new(0.5, 0.5)
+	panel.BackgroundColor3 = BG
+	panel.BorderSizePixel = 0
+	panel.ClipsDescendants = true
+	panel.ZIndex = 50
+	panel.Parent = gui
+
+	teleportPanel = panel
+
+	local panelCorner = Instance.new("UICorner")
+	panelCorner.CornerRadius = UDim.new(0, 14)
+	panelCorner.Parent = panel
+
+	--==================================================
+	-- SECOND GUI RAINBOW
+	--==================================================
+
+	createRainbowEffect(
+		panel,
+		RAINBOW_CORNER_RADIUS
+	)
+
+	--==================================================
+	-- SHADOW
+	--==================================================
+
+	local shadow = Instance.new("UIStroke")
+	shadow.Color = Color3.fromRGB(45, 45, 55)
+	shadow.Thickness = 1
+	shadow.Transparency = 0.2
+	shadow.Parent = panel
+
+	--==================================================
+	-- ACCENT
+	--==================================================
+
+	local panelAccent = Instance.new("Frame")
+	panelAccent.Size = UDim2.new(0, 4, 1, 0)
+	panelAccent.Position = UDim2.fromOffset(0, 0)
+	panelAccent.BackgroundColor3 = gameData.Color
+	panelAccent.BorderSizePixel = 0
+	panelAccent.ZIndex = 51
+	panelAccent.Parent = panel
+
+	--==================================================
+	-- TITLE
+	--==================================================
 
 	local heading = Instance.new("TextLabel")
 	heading.BackgroundTransparency = 1
-	heading.Position = UDim2.fromOffset(15, 27)
-	heading.Size = UDim2.new(1, -30, 0, 24)
+	heading.Position = UDim2.fromOffset(28, 25)
+	heading.Size = UDim2.new(1, -100, 0, 24)
 	heading.Font = Enum.Font.GothamBold
 	heading.Text = "TELEPORTING TO"
-	heading.TextSize = 15
+	heading.TextSize = 14
 	heading.TextColor3 = gameData.Color
-	heading.TextXAlignment = Enum.TextXAlignment.Center
-	heading.ZIndex = 22
-	heading.Parent = screen
+	heading.TextXAlignment = Enum.TextXAlignment.Left
+	heading.ZIndex = 52
+	heading.Parent = panel
 
 	local gameHeading = Instance.new("TextLabel")
 	gameHeading.BackgroundTransparency = 1
-	gameHeading.Position = UDim2.fromOffset(15, 51)
-	gameHeading.Size = UDim2.new(1, -30, 0, 29)
+	gameHeading.Position = UDim2.fromOffset(28, 51)
+	gameHeading.Size = UDim2.new(1, -56, 0, 35)
 	gameHeading.Font = Enum.Font.GothamBold
 	gameHeading.Text = string.upper(gameData.Name)
-	gameHeading.TextSize = 18
+	gameHeading.TextSize = 22
 	gameHeading.TextColor3 = TEXT
-	gameHeading.TextXAlignment = Enum.TextXAlignment.Center
-	gameHeading.ZIndex = 22
-	gameHeading.Parent = screen
+	gameHeading.TextXAlignment = Enum.TextXAlignment.Left
+	gameHeading.ZIndex = 52
+	gameHeading.Parent = panel
 
 	local info = Instance.new("TextLabel")
 	info.BackgroundTransparency = 1
-	info.Position = UDim2.fromOffset(20, 82)
-	info.Size = UDim2.new(1, -40, 0, 22)
+	info.Position = UDim2.fromOffset(28, 89)
+	info.Size = UDim2.new(1, -56, 0, 22)
 	info.Font = Enum.Font.Gotham
-	info.Text = "Your script link is ready."
+	info.Text = "Preparing your teleport..."
 	info.TextSize = 12
 	info.TextColor3 = SUBTEXT
-	info.TextXAlignment = Enum.TextXAlignment.Center
-	info.ZIndex = 22
-	info.Parent = screen
+	info.TextXAlignment = Enum.TextXAlignment.Left
+	info.ZIndex = 52
+	info.Parent = panel
 
 	--==================================================
-	-- LINK BOX
+	-- CLOSE PANEL
+	--==================================================
+
+	local closePanel = Instance.new("TextButton")
+	closePanel.Name = "ClosePanel"
+	closePanel.Size = UDim2.fromOffset(38, 38)
+	closePanel.Position = UDim2.new(1, -55, 0, 22)
+	closePanel.BackgroundColor3 = BUTTON
+	closePanel.BorderSizePixel = 0
+	closePanel.Text = "×"
+	closePanel.Font = Enum.Font.GothamBold
+	closePanel.TextSize = 22
+	closePanel.TextColor3 = SUBTEXT
+	closePanel.AutoButtonColor = false
+	closePanel.ZIndex = 55
+	closePanel.Parent = panel
+
+	local closePanelCorner = Instance.new("UICorner")
+	closePanelCorner.CornerRadius = UDim.new(0, 10)
+	closePanelCorner.Parent = closePanel
+
+	--==================================================
+	-- EXPLANATION BOX
+	--==================================================
+
+	local explanation = Instance.new("Frame")
+	explanation.Position = UDim2.fromOffset(28, 128)
+	explanation.Size = UDim2.new(1, -56, 0, 92)
+	explanation.BackgroundColor3 = Color3.fromRGB(17, 17, 23)
+	explanation.BorderSizePixel = 0
+	explanation.ZIndex = 51
+	explanation.Parent = panel
+
+	local explanationCorner = Instance.new("UICorner")
+	explanationCorner.CornerRadius = UDim.new(0, 11)
+	explanationCorner.Parent = explanation
+
+	local explanationStroke = Instance.new("UIStroke")
+	explanationStroke.Color = Color3.fromRGB(45, 45, 55)
+	explanationStroke.Parent = explanation
+
+	local explanationTitle = Instance.new("TextLabel")
+	explanationTitle.BackgroundTransparency = 1
+	explanationTitle.Position = UDim2.fromOffset(16, 12)
+	explanationTitle.Size = UDim2.new(1, -32, 0, 20)
+	explanationTitle.Font = Enum.Font.GothamBold
+	explanationTitle.Text = "SCRIPT READY"
+	explanationTitle.TextSize = 12
+	explanationTitle.TextColor3 = GREEN
+	explanationTitle.TextXAlignment = Enum.TextXAlignment.Left
+	explanationTitle.ZIndex = 53
+	explanationTitle.Parent = explanation
+
+	local explanationText = Instance.new("TextLabel")
+	explanationText.BackgroundTransparency = 1
+	explanationText.Position = UDim2.fromOffset(16, 34)
+	explanationText.Size = UDim2.new(1, -32, 0, 45)
+	explanationText.Font = Enum.Font.Gotham
+	explanationText.TextWrapped = true
+	explanationText.Text =
+		"The selected game will open automatically.\n"
+		.. "After teleporting, execute your script there."
+	explanationText.TextSize = 11
+	explanationText.TextColor3 = Color3.fromRGB(190, 190, 200)
+	explanationText.TextXAlignment = Enum.TextXAlignment.Left
+	explanationText.TextYAlignment = Enum.TextYAlignment.Top
+	explanationText.ZIndex = 53
+	explanationText.Parent = explanation
+
+	--==================================================
+	-- SCRIPT TEXT
 	--==================================================
 
 	local linkBox = Instance.new("TextBox")
-	linkBox.Name = "ScriptLink"
-	linkBox.Position = UDim2.fromOffset(28, 114)
-	linkBox.Size = UDim2.new(1, -56, 0, 40)
+	linkBox.Name = "ScriptText"
+	linkBox.Position = UDim2.fromOffset(28, 235)
+	linkBox.Size = UDim2.new(1, -56, 0, 48)
 	linkBox.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
 	linkBox.BorderSizePixel = 0
 	linkBox.Font = Enum.Font.Code
-	linkBox.Text = SCRIPT_LINK
-	linkBox.TextSize = 10
+	linkBox.Text = SCRIPT_TO_COPY
+	linkBox.TextSize = 11
 	linkBox.TextColor3 = TEXT
 	linkBox.ClearTextOnFocus = false
-	linkBox.TextEditable = true
+	linkBox.TextEditable = false
 	linkBox.Selectable = true
+	linkBox.Active = true
 	linkBox.TextXAlignment = Enum.TextXAlignment.Center
-	linkBox.ZIndex = 23
-	linkBox.Parent = screen
+	linkBox.TextYAlignment = Enum.TextYAlignment.Center
+	linkBox.ZIndex = 53
+	linkBox.Parent = panel
 
 	local linkCorner = Instance.new("UICorner")
-	linkCorner.CornerRadius = UDim.new(0, 9)
+	linkCorner.CornerRadius = UDim.new(0, 10)
 	linkCorner.Parent = linkBox
 
 	local linkStroke = Instance.new("UIStroke")
@@ -541,96 +1309,116 @@ local function showTeleportScreen(gameData)
 
 	local copyButton = Instance.new("TextButton")
 	copyButton.Name = "CopyButton"
-	copyButton.Position = UDim2.fromOffset(28, 161)
-	copyButton.Size = UDim2.new(1, -56, 0, 34)
+	copyButton.Position = UDim2.fromOffset(28, 295)
+	copyButton.Size = UDim2.new(1, -56, 0, 40)
 	copyButton.BackgroundColor3 = BUTTON
 	copyButton.BorderSizePixel = 0
-	copyButton.Text = "COPY SCRIPT"
+	copyButton.Text = "COPY"
 	copyButton.Font = Enum.Font.GothamBold
 	copyButton.TextSize = 11
 	copyButton.TextColor3 = PURPLE
 	copyButton.AutoButtonColor = false
-	copyButton.ZIndex = 23
-	copyButton.Parent = screen
+	copyButton.ZIndex = 53
+	copyButton.Parent = panel
 
 	local copyCorner = Instance.new("UICorner")
-	copyCorner.CornerRadius = UDim.new(0, 9)
+	copyCorner.CornerRadius = UDim.new(0, 10)
 	copyCorner.Parent = copyButton
 
 	local copyStroke = Instance.new("UIStroke")
 	copyStroke.Color = Color3.fromRGB(55, 55, 65)
-	copyStroke.Thickness = 1
 	copyStroke.Parent = copyButton
 
-	copyButton.MouseEnter:Connect(function()
-		copyButton.BackgroundColor3 = Color3.fromRGB(32, 32, 42)
-	end)
+	--==================================================
+	-- AUTOMATIC CLIPBOARD COPY
+	--==================================================
 
-	copyButton.MouseLeave:Connect(function()
-		copyButton.BackgroundColor3 = BUTTON
-	end)
+	local copying = false
 
 	copyButton.MouseButton1Click:Connect(function()
 
+		if copying then
+			return
+		end
+
+		copying = true
+
+		local copied = false
+
 		local clipboardFunction = setclipboard
 
-		if typeof(clipboardFunction) == "function" then
+		if type(clipboardFunction) == "function" then
 
 			local success = pcall(function()
-				clipboardFunction(SCRIPT_LINK)
+				clipboardFunction(SCRIPT_TO_COPY)
 			end)
 
 			if success then
-				copyButton.Text = "COPIED ✓"
-				copyButton.TextColor3 = GREEN
-			else
-				copyButton.Text = "COPY FAILED"
-				copyButton.TextColor3 = RED
+				copied = true
 			end
+		end
+
+		if copied then
+
+			copyButton.Text = "COPIED!"
+			copyButton.TextColor3 = GREEN
 
 		else
-			copyButton.Text = "CLIPBOARD UNSUPPORTED"
-			copyButton.TextColor3 = Color3.fromRGB(255, 170, 50)
+
+			local success = pcall(function()
+				linkBox:CaptureFocus()
+				linkBox.SelectionStart = 1
+				linkBox.CursorPosition =
+					#SCRIPT_TO_COPY + 1
+			end)
+
+			if success then
+				copyButton.Text = "SELECTED"
+				copyButton.TextColor3 = GREEN
+			else
+				copyButton.Text = "COPY UNAVAILABLE"
+				copyButton.TextColor3 = RED
+			end
 		end
 
 		task.delay(1.5, function()
+
 			if copyButton.Parent then
-				copyButton.Text = "COPY SCRIPT"
+
+				copyButton.Text = "COPY"
 				copyButton.TextColor3 = PURPLE
-				copyButton.BackgroundColor3 = BUTTON
+				copying = false
 			end
 		end)
-
 	end)
 
 	--==================================================
-	-- WARNING
+	-- PROGRESS LABEL
 	--==================================================
 
-	local warning = Instance.new("TextLabel")
-	warning.BackgroundTransparency = 1
-	warning.Position = UDim2.fromOffset(25, 201)
-	warning.Size = UDim2.new(1, -50, 0, 34)
-	warning.Font = Enum.Font.Gotham
-	warning.TextWrapped = true
-	warning.Text = "If teleportation is unavailable, join the game manually\nand use the link above."
-	warning.TextSize = 10
-	warning.TextColor3 = Color3.fromRGB(190, 190, 200)
-	warning.TextXAlignment = Enum.TextXAlignment.Center
-	warning.ZIndex = 22
-	warning.Parent = screen
+	local progressLabel = Instance.new("TextLabel")
+	progressLabel.BackgroundTransparency = 1
+	progressLabel.Position = UDim2.fromOffset(28, 350)
+	progressLabel.Size = UDim2.new(1, -56, 0, 20)
+	progressLabel.Font = Enum.Font.GothamBold
+	progressLabel.Text = "CONNECTING TO ROBLOX..."
+	progressLabel.TextSize = 10
+	progressLabel.TextColor3 = SUBTEXT
+	progressLabel.TextXAlignment = Enum.TextXAlignment.Left
+	progressLabel.ZIndex = 52
+	progressLabel.Parent = panel
 
 	--==================================================
 	-- PROGRESS BAR
 	--==================================================
 
 	local progressBG = Instance.new("Frame")
-	progressBG.Position = UDim2.fromOffset(28, 241)
+	progressBG.Position = UDim2.fromOffset(28, 378)
 	progressBG.Size = UDim2.new(1, -56, 0, 7)
 	progressBG.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
 	progressBG.BorderSizePixel = 0
-	progressBG.ZIndex = 22
-	progressBG.Parent = screen
+	progressBG.ZIndex = 52
+	progressBG.Parent = panel
 
 	local progressBGCorner = Instance.new("UICorner")
 	progressBGCorner.CornerRadius = UDim.new(1, 0)
@@ -640,7 +1428,7 @@ local function showTeleportScreen(gameData)
 	progress.Size = UDim2.new(0, 0, 1, 0)
 	progress.BackgroundColor3 = gameData.Color
 	progress.BorderSizePixel = 0
-	progress.ZIndex = 23
+	progress.ZIndex = 53
 	progress.Parent = progressBG
 
 	local progressCorner = Instance.new("UICorner")
@@ -648,13 +1436,13 @@ local function showTeleportScreen(gameData)
 	progressCorner.Parent = progress
 
 	--==================================================
-	-- BACK
+	-- BACK BUTTON
 	--==================================================
 
 	local back = Instance.new("TextButton")
 	back.Name = "Back"
-	back.Position = UDim2.fromOffset(28, 264)
-	back.Size = UDim2.new(1, -56, 0, 36)
+	back.Position = UDim2.fromOffset(28, 395)
+	back.Size = UDim2.new(1, -56, 0, 30)
 	back.BackgroundColor3 = BUTTON
 	back.BorderSizePixel = 0
 	back.Text = "BACK TO GAMES"
@@ -662,33 +1450,102 @@ local function showTeleportScreen(gameData)
 	back.TextSize = 10
 	back.TextColor3 = Color3.fromRGB(190, 190, 200)
 	back.AutoButtonColor = false
-	back.ZIndex = 23
-	back.Parent = screen
+	back.ZIndex = 55
+	back.Parent = panel
 
 	local backCorner = Instance.new("UICorner")
 	backCorner.CornerRadius = UDim.new(0, 9)
 	backCorner.Parent = back
 
-	back.MouseEnter:Connect(function()
-		back.BackgroundColor3 = Color3.fromRGB(32, 32, 42)
-	end)
+	--==================================================
+	-- PANEL CLOSE FUNCTION
+	--==================================================
 
-	back.MouseLeave:Connect(function()
-		back.BackgroundColor3 = BUTTON
-	end)
+	local closing = false
 
-	back.MouseButton1Click:Connect(function()
+	local function closeTeleportPanel()
 
-		screen:Destroy()
+		if closing then
+			return
+		end
 
-		scroll.Visible = true
-		title.Visible = true
-		subtitle.Visible = true
-		close.Visible = true
-		divider.Visible = true
-		dragArea.Visible = true
+		if not panel.Parent then
+			return
+		end
 
-	end)
+		closing = true
+		teleportBusy = true
+
+		closePanel.Active = false
+		back.Active = false
+
+		local slideOut = TweenService:Create(
+			panel,
+			TweenInfo.new(
+				ANIMATION_TIME,
+				Enum.EasingStyle.Quart,
+				Enum.EasingDirection.InOut
+			),
+			{
+				Position = UDim2.new(
+					1,
+					650,
+					0.5,
+					0
+				)
+			}
+		)
+
+		local restoreMain = TweenService:Create(
+			main,
+			TweenInfo.new(
+				ANIMATION_TIME,
+				Enum.EasingStyle.Quart,
+				Enum.EasingDirection.InOut
+			),
+			{
+				Size = NORMAL_SIZE
+			}
+		)
+
+		slideOut:Play()
+		restoreMain:Play()
+
+		slideOut.Completed:Wait()
+
+		if panel.Parent then
+			panel:Destroy()
+		end
+
+		teleportPanel = nil
+		teleportBusy = false
+	end
+
+	closePanel.MouseButton1Click:Connect(
+		closeTeleportPanel
+	)
+
+	back.MouseButton1Click:Connect(
+		closeTeleportPanel
+	)
+
+	--==================================================
+	-- SLIDE IN
+	--==================================================
+
+	local slideIn = TweenService:Create(
+		panel,
+		TweenInfo.new(
+			ANIMATION_TIME,
+			Enum.EasingStyle.Quart,
+			Enum.EasingDirection.InOut
+		),
+		{
+			Position = UDim2.fromScale(0.5, 0.5)
+		}
+	)
+
+	slideIn:Play()
 
 	--==================================================
 	-- PROGRESS ANIMATION
@@ -702,11 +1559,31 @@ local function showTeleportScreen(gameData)
 				return
 			end
 
-			progress.Size = UDim2.new(i / 100, 0, 1, 0)
-			task.wait(0.02)
+			progress.Size = UDim2.new(
+				i / 100,
+				0,
+				1,
+				0
+			)
 
+			if i < 35 then
+
+				progressLabel.Text =
+					"CONNECTING TO ROBLOX..."
+
+			elseif i < 70 then
+
+				progressLabel.Text =
+					"PREPARING GAME TELEPORT..."
+
+			else
+
+				progressLabel.Text =
+					"TELEPORT REQUEST READY..."
+			end
+
+			task.wait(0.025)
 		end
-
 	end)
 
 	--==================================================
@@ -715,16 +1592,47 @@ local function showTeleportScreen(gameData)
 
 	task.delay(0.8, function()
 
-		if screen.Parent and gameData.PlaceId > 0 then
-
-			pcall(function()
-				TeleportService:Teleport(gameData.PlaceId, player)
-			end)
-
+		if not panel.Parent then
+			return
 		end
 
-	end)
+		if gameData.PlaceId <= 0 then
 
+			info.Text = "Invalid game ID."
+			return
+		end
+
+		info.Text =
+			"Teleport request sent..."
+
+		progressLabel.Text =
+			"OPENING "
+			.. string.upper(gameData.Name)
+			.. "..."
+
+		local success, errorMessage =
+			pcall(function()
+
+				TeleportService:Teleport(
+					gameData.PlaceId,
+					player
+				)
+			end)
+
+		if not success then
+
+			info.Text =
+				"Teleport failed. Try again."
+
+			progressLabel.Text =
+				"TELEPORT FAILED"
+
+			warn(
+				"[UniversalPremiumScript] Teleport failed:",
+				errorMessage
+			)
+		end
+	end)
 end
 
 --==================================================
@@ -735,10 +1643,11 @@ for index, gameData in ipairs(GAMES) do
 
 	local card = Instance.new("Frame")
 	card.Name = gameData.Name
-	card.Size = UDim2.new(1, -3, 0, 52)
+	card.Size = UDim2.new(1, -3, 0, 65)
 	card.BackgroundColor3 = PANEL
 	card.BorderSizePixel = 0
 	card.LayoutOrder = index
+	card.ZIndex = 6
 	card.Parent = scroll
 
 	local cardCorner = Instance.new("UICorner")
@@ -750,10 +1659,12 @@ for index, gameData in ipairs(GAMES) do
 	stroke.Thickness = 1
 	stroke.Parent = card
 
+	--==================================================
 	-- COLOR BAR
+	--==================================================
 
 	local bar = Instance.new("Frame")
-	bar.Size = UDim2.fromOffset(5, 36)
+	bar.Size = UDim2.fromOffset(5, 48)
 	bar.Position = UDim2.fromOffset(11, 8)
 	bar.BackgroundColor3 = gameData.Color
 	bar.BorderSizePixel = 0
@@ -763,12 +1674,14 @@ for index, gameData in ipairs(GAMES) do
 	barCorner.CornerRadius = UDim.new(1, 0)
 	barCorner.Parent = bar
 
+	--==================================================
 	-- GAME NAME
+	--==================================================
 
 	local name = Instance.new("TextLabel")
 	name.BackgroundTransparency = 1
-	name.Position = UDim2.fromOffset(25, 5)
-	name.Size = UDim2.new(1, -165, 0, 22)
+	name.Position = UDim2.fromOffset(25, 6)
+	name.Size = UDim2.new(1, -370, 0, 20)
 	name.Font = Enum.Font.GothamBold
 	name.Text = gameData.Name
 	name.TextSize = 13
@@ -776,12 +1689,14 @@ for index, gameData in ipairs(GAMES) do
 	name.TextXAlignment = Enum.TextXAlignment.Left
 	name.Parent = card
 
+	--==================================================
 	-- DESCRIPTION
+	--==================================================
 
 	local description = Instance.new("TextLabel")
 	description.BackgroundTransparency = 1
 	description.Position = UDim2.fromOffset(25, 27)
-	description.Size = UDim2.new(1, -165, 0, 17)
+	description.Size = UDim2.new(1, -370, 0, 17)
 	description.Font = Enum.Font.Gotham
 	description.Text = gameData.Description
 	description.TextSize = 10
@@ -789,12 +1704,79 @@ for index, gameData in ipairs(GAMES) do
 	description.TextXAlignment = Enum.TextXAlignment.Left
 	description.Parent = card
 
-	-- JOIN BUTTON
+	--==================================================
+	-- STATS
+	--==================================================
+
+	local stats = Instance.new("Frame")
+	stats.Name = "ExecutionStats"
+	stats.Position = UDim2.new(1, -285, 0, 9)
+	stats.Size = UDim2.fromOffset(155, 47)
+	stats.BackgroundTransparency = 1
+	stats.Parent = card
+
+	local liveDot = Instance.new("TextLabel")
+	liveDot.BackgroundTransparency = 1
+	liveDot.Position = UDim2.fromOffset(0, 0)
+	liveDot.Size = UDim2.fromOffset(14, 20)
+	liveDot.Font = Enum.Font.GothamBold
+	liveDot.Text = "●"
+	liveDot.TextSize = 9
+	liveDot.TextColor3 = GREEN
+	liveDot.Parent = stats
+
+	local liveLabel = Instance.new("TextLabel")
+	liveLabel.BackgroundTransparency = 1
+	liveLabel.Position = UDim2.fromOffset(14, 0)
+	liveLabel.Size = UDim2.fromOffset(55, 20)
+	liveLabel.Font = Enum.Font.GothamBold
+	liveLabel.Text = "LIVE"
+	liveLabel.TextSize = 8
+	liveLabel.TextColor3 = GREEN
+	liveLabel.TextXAlignment = Enum.TextXAlignment.Left
+	liveLabel.Parent = stats
+
+	local liveValue = Instance.new("TextLabel")
+	liveValue.BackgroundTransparency = 1
+	liveValue.Position = UDim2.fromOffset(65, 0)
+	liveValue.Size = UDim2.fromOffset(85, 20)
+	liveValue.Font = Enum.Font.GothamBold
+	liveValue.Text = tostring(gameData.Live)
+	liveValue.TextSize = 10
+	liveValue.TextColor3 = TEXT
+	liveValue.TextXAlignment = Enum.TextXAlignment.Right
+	liveValue.Parent = stats
+
+	local totalLabel = Instance.new("TextLabel")
+	totalLabel.BackgroundTransparency = 1
+	totalLabel.Position = UDim2.fromOffset(0, 22)
+	totalLabel.Size = UDim2.fromOffset(75, 20)
+	totalLabel.Font = Enum.Font.Gotham
+	totalLabel.Text = "TOTAL"
+	totalLabel.TextSize = 8
+	totalLabel.TextColor3 = SUBTEXT
+	totalLabel.TextXAlignment = Enum.TextXAlignment.Left
+	totalLabel.Parent = stats
+
+	local totalValue = Instance.new("TextLabel")
+	totalValue.BackgroundTransparency = 1
+	totalValue.Position = UDim2.fromOffset(65, 22)
+	totalValue.Size = UDim2.fromOffset(85, 20)
+	totalValue.Font = Enum.Font.GothamBold
+	totalValue.Text = tostring(gameData.Total)
+	totalValue.TextSize = 9
+	totalValue.TextColor3 = Color3.fromRGB(205, 205, 215)
+	totalValue.TextXAlignment = Enum.TextXAlignment.Right
+	totalValue.Parent = stats
+
+	--==================================================
+	-- JOIN
+	--==================================================
 
 	local join = Instance.new("TextButton")
 	join.Name = "Join"
-	join.Size = UDim2.fromOffset(108, 32)
-	join.Position = UDim2.new(1, -120, 0.5, -16)
+	join.Size = UDim2.fromOffset(88, 32)
+	join.Position = UDim2.new(1, -100, 0.5, -16)
 	join.BackgroundColor3 = BUTTON
 	join.BorderSizePixel = 0
 	join.Text = "JOIN"
@@ -802,6 +1784,7 @@ for index, gameData in ipairs(GAMES) do
 	join.TextSize = 11
 	join.TextColor3 = gameData.Color
 	join.AutoButtonColor = false
+	join.ZIndex = 10
 	join.Parent = card
 
 	local joinCorner = Instance.new("UICorner")
@@ -809,7 +1792,8 @@ for index, gameData in ipairs(GAMES) do
 	joinCorner.Parent = join
 
 	join.MouseEnter:Connect(function()
-		join.BackgroundColor3 = Color3.fromRGB(32, 32, 42)
+		join.BackgroundColor3 =
+			Color3.fromRGB(32, 32, 42)
 	end)
 
 	join.MouseLeave:Connect(function()
@@ -817,7 +1801,103 @@ for index, gameData in ipairs(GAMES) do
 	end)
 
 	join.MouseButton1Click:Connect(function()
+
+		if teleportBusy then
+			return
+		end
+
 		showTeleportScreen(gameData)
 	end)
 
+	--==================================================
+	-- LIVE COUNTER
+	--==================================================
+
+	task.spawn(function()
+
+		local live = gameData.Live
+		local total = gameData.Total
+
+		while card.Parent do
+
+			task.wait(math.random(2, 5))
+
+			if not card.Parent then
+				break
+			end
+
+			local change =
+				math.random(-12, 18)
+
+			live =
+				math.max(
+					1,
+					live + change
+				)
+
+			if math.random() > 0.35 then
+				total =
+					total + math.random(1, 7)
+			end
+
+			liveValue.Text =
+				tostring(live)
+
+			totalValue.Text =
+				tostring(total)
+
+			liveValue.TextTransparency =
+				0.35
+
+			TweenService:Create(
+				liveValue,
+				TweenInfo.new(
+					0.25,
+					Enum.EasingStyle.Quad,
+					Enum.EasingDirection.Out
+				),
+				{
+					TextTransparency = 0
+				}
+			):Play()
+		end
+	end)
+
+	--==================================================
+	-- LIVE DOT PULSE
+	--==================================================
+
+	task.spawn(function()
+
+		while card.Parent do
+
+			TweenService:Create(
+				liveDot,
+				TweenInfo.new(
+					0.6,
+					Enum.EasingStyle.Sine,
+					Enum.EasingDirection.InOut
+				),
+				{
+					TextTransparency = 0.6
+				}
+			):Play()
+
+			task.wait(0.6)
+
+			TweenService:Create(
+				liveDot,
+				TweenInfo.new(
+					0.6,
+					Enum.EasingStyle.Sine,
+					Enum.EasingDirection.InOut
+				),
+				{
+					TextTransparency = 0
+				}
+			):Play()
+
+			task.wait(0.6)
+		end
+	end)
 end
