@@ -2,6 +2,12 @@
 --// Roblox Studio LocalScript
 --// Place in StarterPlayer > StarterPlayerScripts
 --//
+--// STARTUP:
+--// Premium 10 second loading screen
+--// Main GUI stays hidden until loading reaches 100%
+--// Loading screen smoothly fades out
+--// Main GUI then becomes visible
+--//
 --// JOIN:
 --// Main GUI shrinks
 --// Large teleport panel slides in from the right
@@ -638,6 +644,7 @@ main.BackgroundColor3 = BG
 main.BorderSizePixel = 0
 main.ClipsDescendants = false
 main.ZIndex = 5
+main.Visible = false
 main.Parent = gui
 
 local mainCorner = Instance.new("UICorner")
@@ -1901,3 +1908,533 @@ for index, gameData in ipairs(GAMES) do
 		end
 	end)
 end
+
+--==================================================
+-- PREMIUM STARTUP LOADING SCREEN
+--==================================================
+
+local loading = Instance.new("ScreenGui")
+loading.Name = "GurkhaStartupLoading"
+loading.ResetOnSpawn = false
+loading.IgnoreGuiInset = true
+loading.DisplayOrder = 1000
+loading.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+loading.Parent = playerGui
+
+--==================================================
+-- LOADING BACKGROUND
+--==================================================
+
+local loadingBG = Instance.new("Frame")
+loadingBG.Name = "Background"
+loadingBG.Size = UDim2.fromScale(1, 1)
+loadingBG.Position = UDim2.fromScale(0, 0)
+loadingBG.BackgroundColor3 = Color3.fromRGB(5, 5, 9)
+loadingBG.BorderSizePixel = 0
+loadingBG.ZIndex = 1
+loadingBG.Parent = loading
+
+--==================================================
+-- BACKGROUND GRADIENT
+--==================================================
+
+local backgroundGradient = Instance.new("UIGradient")
+backgroundGradient.Rotation = 45
+backgroundGradient.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(
+		0,
+		Color3.fromRGB(5, 5, 10)
+	),
+	ColorSequenceKeypoint.new(
+		0.5,
+		Color3.fromRGB(13, 7, 18)
+	),
+	ColorSequenceKeypoint.new(
+		1,
+		Color3.fromRGB(5, 5, 10)
+	)
+})
+backgroundGradient.Parent = loadingBG
+
+--==================================================
+-- CENTER CONTAINER
+--==================================================
+
+local loadingContainer = Instance.new("Frame")
+loadingContainer.Name = "LoadingContainer"
+loadingContainer.Size = UDim2.fromOffset(390, 235)
+loadingContainer.Position = UDim2.fromScale(0.5, 0.5)
+loadingContainer.AnchorPoint = Vector2.new(0.5, 0.5)
+loadingContainer.BackgroundColor3 = Color3.fromRGB(13, 13, 20)
+loadingContainer.BorderSizePixel = 0
+loadingContainer.ZIndex = 5
+loadingContainer.Parent = loadingBG
+
+local containerCorner = Instance.new("UICorner")
+containerCorner.CornerRadius = UDim.new(0, 16)
+containerCorner.Parent = loadingContainer
+
+local containerStroke = Instance.new("UIStroke")
+containerStroke.Color = Color3.fromRGB(75, 35, 95)
+containerStroke.Thickness = 1
+containerStroke.Transparency = 0.25
+containerStroke.Parent = loadingContainer
+
+--==================================================
+-- RESPONSIVE SCALE
+--==================================================
+
+local loadingScale = Instance.new("UIScale")
+loadingScale.Parent = loadingContainer
+
+local function updateLoadingScale()
+	local camera = workspace.CurrentCamera
+
+	if not camera then
+		return
+	end
+
+	local viewport = camera.ViewportSize
+	local shortest = math.min(viewport.X, viewport.Y)
+
+	loadingScale.Scale = math.clamp(
+		shortest / 650,
+		0.72,
+		1
+	)
+end
+
+updateLoadingScale()
+
+if workspace.CurrentCamera then
+	workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(
+		updateLoadingScale
+	)
+end
+
+--==================================================
+-- TOP GLOW
+--==================================================
+
+local topGlow = Instance.new("Frame")
+topGlow.Name = "TopGlow"
+topGlow.Size = UDim2.new(1, 0, 0, 2)
+topGlow.Position = UDim2.fromOffset(0, 0)
+topGlow.BackgroundColor3 = PURPLE
+topGlow.BorderSizePixel = 0
+topGlow.ZIndex = 7
+topGlow.Parent = loadingContainer
+
+local topGlowGradient = Instance.new("UIGradient")
+topGlowGradient.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(
+		0,
+		Color3.fromRGB(90, 40, 190)
+	),
+	ColorSequenceKeypoint.new(
+		0.5,
+		Color3.fromRGB(235, 40, 190)
+	),
+	ColorSequenceKeypoint.new(
+		1,
+		Color3.fromRGB(90, 40, 190)
+	)
+})
+topGlowGradient.Parent = topGlow
+
+--==================================================
+-- LOADING TITLE
+--==================================================
+
+local loadingTitle = Instance.new("TextLabel")
+loadingTitle.BackgroundTransparency = 1
+loadingTitle.Position = UDim2.fromOffset(25, 18)
+loadingTitle.Size = UDim2.new(1, -50, 0, 28)
+loadingTitle.Font = Enum.Font.GothamBold
+loadingTitle.Text = "GURKHA"
+loadingTitle.TextSize = 21
+loadingTitle.TextColor3 = Color3.fromRGB(235, 65, 215)
+loadingTitle.TextXAlignment = Enum.TextXAlignment.Center
+loadingTitle.ZIndex = 8
+loadingTitle.Parent = loadingContainer
+
+--==================================================
+-- LOADING SUBTITLE
+--==================================================
+
+local loadingSubtitle = Instance.new("TextLabel")
+loadingSubtitle.BackgroundTransparency = 1
+loadingSubtitle.Position = UDim2.fromOffset(25, 46)
+loadingSubtitle.Size = UDim2.new(1, -50, 0, 18)
+loadingSubtitle.Font = Enum.Font.Gotham
+loadingSubtitle.Text = "PREMIUM UNIVERSAL LOADER"
+loadingSubtitle.TextSize = 9
+loadingSubtitle.TextColor3 = Color3.fromRGB(125, 125, 140)
+loadingSubtitle.TextXAlignment = Enum.TextXAlignment.Center
+loadingSubtitle.ZIndex = 8
+loadingSubtitle.Parent = loadingContainer
+
+--==================================================
+-- SPINNER
+--==================================================
+
+local spinner = Instance.new("Frame")
+spinner.Name = "Spinner"
+spinner.Size = UDim2.fromOffset(50, 50)
+spinner.Position = UDim2.fromScale(0.5, 0)
+spinner.AnchorPoint = Vector2.new(0.5, 0)
+spinner.Position = UDim2.new(0.5, 0, 0, 72)
+spinner.BackgroundTransparency = 1
+spinner.ZIndex = 8
+spinner.Parent = loadingContainer
+
+local spinnerStroke = Instance.new("UIStroke")
+spinnerStroke.Color = Color3.fromRGB(70, 35, 90)
+spinnerStroke.Thickness = 3
+spinnerStroke.Transparency = 0.35
+spinnerStroke.Parent = spinner
+
+local spinnerCorner = Instance.new("UICorner")
+spinnerCorner.CornerRadius = UDim.new(1, 0)
+spinnerCorner.Parent = spinner
+
+local spinnerArc = Instance.new("Frame")
+spinnerArc.Name = "SpinnerArc"
+spinnerArc.Size = UDim2.fromOffset(50, 50)
+spinnerArc.Position = UDim2.fromOffset(0, 0)
+spinnerArc.BackgroundTransparency = 1
+spinnerArc.ZIndex = 9
+spinnerArc.Parent = spinner
+
+local spinnerArcStroke = Instance.new("UIStroke")
+spinnerArcStroke.Color = Color3.fromRGB(220, 45, 205)
+spinnerArcStroke.Thickness = 3
+spinnerArcStroke.Transparency = 0
+spinnerArcStroke.Parent = spinnerArc
+
+local spinnerArcCorner = Instance.new("UICorner")
+spinnerArcCorner.CornerRadius = UDim.new(1, 0)
+spinnerArcCorner.Parent = spinnerArc
+
+local spinnerRotation = 0
+local spinnerConnection
+
+spinnerConnection = RunService.RenderStepped:Connect(function(deltaTime)
+
+	if not loading.Parent then
+		if spinnerConnection then
+			spinnerConnection:Disconnect()
+		end
+		return
+	end
+
+	spinnerRotation =
+		(spinnerRotation + deltaTime * 220) % 360
+
+	spinnerArc.Rotation = spinnerRotation
+end)
+
+--==================================================
+-- STATUS
+--==================================================
+
+local loadingStatus = Instance.new("TextLabel")
+loadingStatus.BackgroundTransparency = 1
+loadingStatus.Position = UDim2.fromOffset(25, 132)
+loadingStatus.Size = UDim2.new(1, -50, 0, 22)
+loadingStatus.Font = Enum.Font.GothamMedium
+loadingStatus.Text = "Initializing..."
+loadingStatus.TextSize = 11
+loadingStatus.TextColor3 = Color3.fromRGB(195, 195, 205)
+loadingStatus.TextXAlignment = Enum.TextXAlignment.Center
+loadingStatus.ZIndex = 8
+loadingStatus.Parent = loadingContainer
+
+--==================================================
+-- PERCENTAGE
+--==================================================
+
+local percentage = Instance.new("TextLabel")
+percentage.BackgroundTransparency = 1
+percentage.Position = UDim2.fromOffset(25, 153)
+percentage.Size = UDim2.new(1, -50, 0, 25)
+percentage.Font = Enum.Font.GothamBold
+percentage.Text = "0%"
+percentage.TextSize = 13
+percentage.TextColor3 = Color3.fromRGB(225, 55, 205)
+percentage.TextXAlignment = Enum.TextXAlignment.Center
+percentage.ZIndex = 8
+percentage.Parent = loadingContainer
+
+--==================================================
+-- PROGRESS BACKGROUND
+--==================================================
+
+local progressBackground = Instance.new("Frame")
+progressBackground.Name = "ProgressBackground"
+progressBackground.Position = UDim2.fromOffset(35, 185)
+progressBackground.Size = UDim2.new(1, -70, 0, 6)
+progressBackground.BackgroundColor3 = Color3.fromRGB(28, 28, 38)
+progressBackground.BorderSizePixel = 0
+progressBackground.ZIndex = 8
+progressBackground.Parent = loadingContainer
+
+local progressBackgroundCorner = Instance.new("UICorner")
+progressBackgroundCorner.CornerRadius = UDim.new(1, 0)
+progressBackgroundCorner.Parent = progressBackground
+
+--==================================================
+-- PROGRESS FILL
+--==================================================
+
+local progressFill = Instance.new("Frame")
+progressFill.Name = "ProgressFill"
+progressFill.Size = UDim2.new(0, 0, 1, 0)
+progressFill.Position = UDim2.fromScale(0, 0)
+progressFill.BackgroundColor3 = PURPLE
+progressFill.BorderSizePixel = 0
+progressFill.ZIndex = 9
+progressFill.Parent = progressBackground
+
+local progressFillCorner = Instance.new("UICorner")
+progressFillCorner.CornerRadius = UDim.new(1, 0)
+progressFillCorner.Parent = progressFill
+
+local progressGradient = Instance.new("UIGradient")
+progressGradient.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(
+		0,
+		Color3.fromRGB(125, 50, 245)
+	),
+	ColorSequenceKeypoint.new(
+		0.5,
+		Color3.fromRGB(235, 45, 195)
+	),
+	ColorSequenceKeypoint.new(
+		1,
+		Color3.fromRGB(255, 75, 220)
+	)
+})
+progressGradient.Parent = progressFill
+
+--==================================================
+-- LOADING FOOTER
+--==================================================
+
+local loadingFooter = Instance.new("TextLabel")
+loadingFooter.BackgroundTransparency = 1
+loadingFooter.Position = UDim2.fromOffset(25, 199)
+loadingFooter.Size = UDim2.new(1, -50, 0, 18)
+loadingFooter.Font = Enum.Font.Gotham
+loadingFooter.Text = "PLEASE WAIT"
+loadingFooter.TextSize = 8
+loadingFooter.TextColor3 = Color3.fromRGB(95, 95, 110)
+loadingFooter.TextXAlignment = Enum.TextXAlignment.Center
+loadingFooter.ZIndex = 8
+loadingFooter.Parent = loadingContainer
+
+--==================================================
+-- LOADING STATUS ANIMATION
+--==================================================
+
+local loadingStatuses = {
+	{Time = 0, Text = "Initializing..."},
+	{Time = 1.7, Text = "Loading interface..."},
+	{Time = 3.4, Text = "Preparing games..."},
+	{Time = 5.1, Text = "Loading assets..."},
+	{Time = 7.2, Text = "Almost ready..."},
+	{Time = 9.2, Text = "Almost ready..."}
+}
+
+--==================================================
+-- STARTUP SEQUENCE
+-- IMPORTANT:
+-- main GUI was completely created above.
+-- main.Visible is false until loading finishes.
+--==================================================
+
+task.spawn(function()
+
+	local startTime = os.clock()
+	local statusIndex = 1
+	local fadeStarted = false
+
+	while true do
+
+		local elapsed =
+			os.clock() - startTime
+
+		local progressValue =
+			math.clamp(elapsed / 10, 0, 1)
+
+		local percent =
+			math.floor(progressValue * 100)
+
+		progressFill.Size =
+			UDim2.new(
+				progressValue,
+				0,
+				1,
+				0
+			)
+
+		percentage.Text =
+			tostring(percent) .. "%"
+
+		-- Status changes without affecting the 10-second timer
+		for i = #loadingStatuses, 1, -1 do
+
+			if elapsed >= loadingStatuses[i].Time then
+
+				if statusIndex ~= i then
+
+					statusIndex = i
+
+					loadingStatus.TextTransparency = 1
+
+					TweenService:Create(
+						loadingStatus,
+						TweenInfo.new(
+							0.18,
+							Enum.EasingStyle.Quad,
+							Enum.EasingDirection.Out
+						),
+						{
+							TextTransparency = 0
+						}
+					):Play()
+				end
+
+				loadingStatus.Text =
+					loadingStatuses[i].Text
+
+				break
+			end
+		end
+
+		if elapsed >= 10 then
+			break
+		end
+
+		RunService.RenderStepped:Wait()
+	end
+
+	--==================================================
+	-- 100% COMPLETE
+	--==================================================
+
+	progressFill.Size =
+		UDim2.new(
+			1,
+			0,
+			1,
+			0
+		)
+
+	percentage.Text = "100%"
+	loadingStatus.Text = "Complete!"
+	loadingFooter.Text = "READY"
+
+	-- Small premium completion pause
+	task.wait(0.35)
+
+	if fadeStarted then
+		return
+	end
+
+	fadeStarted = true
+
+	--==================================================
+	-- FADE LOADING CONTENT
+	--==================================================
+
+	local fadeInfo = TweenInfo.new(
+		0.55,
+		Enum.EasingStyle.Quad,
+		Enum.EasingDirection.InOut
+	)
+
+	local fadeObjects = {
+		loadingContainer,
+		loadingTitle,
+		loadingSubtitle,
+		loadingStatus,
+		percentage,
+		loadingFooter
+	}
+
+	-- Main GUI appears while the loading screen fades
+	main.Visible = true
+
+	-- Fade text elements
+	for _, object in ipairs(fadeObjects) do
+
+		if object:IsA("TextLabel") then
+
+			TweenService:Create(
+				object,
+				fadeInfo,
+				{
+					TextTransparency = 1
+				}
+			):Play()
+
+		elseif object:IsA("Frame") then
+
+			TweenService:Create(
+				object,
+				fadeInfo,
+				{
+					BackgroundTransparency = 1
+				}
+			):Play()
+		end
+	end
+
+	-- Fade strokes
+	for _, object in ipairs(loadingContainer:GetDescendants()) do
+
+		if object:IsA("UIStroke") then
+
+			TweenService:Create(
+				object,
+				fadeInfo,
+				{
+					Transparency = 1
+				}
+			):Play()
+		end
+	end
+
+	-- Fade the entire loading background
+	local backgroundFade = TweenService:Create(
+		loadingBG,
+		TweenInfo.new(
+			0.7,
+			Enum.EasingStyle.Quad,
+			Enum.EasingDirection.InOut
+		),
+		{
+			BackgroundTransparency = 1
+		}
+	)
+
+	backgroundFade:Play()
+	backgroundFade.Completed:Wait()
+
+	--==================================================
+	-- CLEANUP
+	--==================================================
+
+	if spinnerConnection then
+		spinnerConnection:Disconnect()
+		spinnerConnection = nil
+	end
+
+	if loading.Parent then
+		loading:Destroy()
+	end
+
+	-- Ensure main GUI is visible
+	main.Visible = true
+end)
